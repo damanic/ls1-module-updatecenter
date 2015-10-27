@@ -1,0 +1,38 @@
+<? $left = true ?>
+<p>If you do not want lemonstand to update a module by any means, tick the corresponding box</p>
+<ul class="formElements">
+
+	<?
+	$left = true;
+	$modules = Core_ModuleManager::listModules();
+	$blocked_modules = $form_model->get_blocked_modules();
+			foreach ($modules as $module)
+			{
+				$module_info = $module->getModuleInfo();
+				$module_id = mb_strtolower($module->getId());
+				$build = $module_info->getVersion();
+				$checked = in_array($module_id,$blocked_modules) ? 'checked' : null;
+	?>
+
+	<li id="form_field_updatecenter_module_<?= $module_id ?>>" class="field checkbox <?=(($left = !$left) ? 'left' : 'right'); ?> ">
+
+		<label for="UpdateCenter_Config_block_module_<?= $module_id ?>">
+			<?=$module->getId()?>
+		</label>
+
+
+		<div id="form_field_container_updatecenter_module_<?= $module_id ?>" class="fieldContainer ">
+
+			<div tabindex="0" class="checkbox"></div>
+			<input id="UpdateCenter_Config_block_module_<?= $module_id ?>" name="UpdateCenter_Config[block_module_<?= $module_id ?>]" value="1" class="checkbox hidden" type="checkbox" <?=$checked?>>
+
+		</div>
+
+		<div class="clear"></div>
+	</li>
+
+	<?
+			}
+	?>
+
+</ul>

@@ -1,0 +1,1 @@
+INSERT INTO `updatecenter_config` (`blocked_modules`, `repository_config`) VALUES (NULL,NULL);
