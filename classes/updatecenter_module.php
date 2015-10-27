@@ -68,6 +68,11 @@ class updateCenter_Module extends Core_ModuleBase {
 
 	public function add_repository_updates($data){
 		$config = UpdateCenter_Config::get();
+		if(!$config->has_active_repository()){
+			return $data;
+		}
+
+		$config = UpdateCenter_Config::get();
 		$repo = new UpdateCenter_Repository();
 		$updates = $repo->get_repository_updates();
 
