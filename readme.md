@@ -1,0 +1,1 @@
+Requires latest core module: https://github.com/damanic/ls1-module-core
