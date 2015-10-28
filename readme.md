@@ -1,4 +1,4 @@
-#Lemonstand Version 1
+#Update Center: Lemonstand Version 1
 ###Update modules from GitHub using the backend `Modules & Updates' update tool! 
 This module also allows you to continue using lemonstand marketplace updates when core modules have been updated beyond lemonstands last version.
 
