@@ -37,7 +37,7 @@ Out of the box a fully functional repo config file is available for selection vi
 #Adding Custom Repository Config Files
 Copy the contents of `/modules/updatecenter/repositories/damanic/info.php` to `/modules/updatecenter/repositories/{yourfolder}/info.php`.  Edit the name, description and repositories data.  Once saved it will be available for selection from `{youradminurl}/updatecenter/setup/`. Each config file you add must reside in its own folder.
 
-#Example Config File
+#Included Config File
 ```
 
 	$repository_info = array(
