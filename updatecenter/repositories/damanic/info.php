@@ -7,10 +7,10 @@
 			array(
 				'source' =>	'github',
 				'modules' => array(
-					'shop' => array(
-						'owner' => 'damanic',
-						'repo' => 'ls1-module-shop',
-					),
+//					'shop' => array(
+//						'owner' => 'damanic',
+//						'repo' => 'ls1-module-shop',
+//					),
 					'core' => array(
 						'owner' => 'damanic',
 						'repo' => 'ls1-module-core',

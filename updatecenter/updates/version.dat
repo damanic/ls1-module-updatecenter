@@ -12,3 +12,4 @@
 #1.2.2 Allow for forced updates from repositories.
 #1.2.3 Git Driver accepts 'git_use_branch' as parameter in config to use a branches current source (bleeding edge updates)).
 #1.2.4 Bugfix: UpdateCenter_Repository_github::get_latest_version_zip_size() was returning wrong when 'git_use_branch' option set.
+#1.2.5 Commented out git:damanic:ls1-module-shop from default config file.
