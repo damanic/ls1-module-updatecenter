@@ -52,6 +52,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 	}
 
 	public function get_latest_version_zip_size($module_name){
+		$repo_details = $this->module_info[$module_name];
 
 		if(!empty($repo_details['git_use_branch'])) { //downloading latest source, size unknown
 			return 0;

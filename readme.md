@@ -86,6 +86,11 @@ The repo updates will only update modules in the /module/ directory. It does not
 - Set from 'block' tab in :  {youradminurl}/updatecenter/setup/
 - Select any module that you would like the update center to block from receiving updates. This applies to both repo and the lemonstand update delivery service.
 
+#Forced Updates
+Using the forced update button when no updates are found forces lemonstand to re-download the modules and overwite them: 
+- First all the final/latest releases from the lemonstand update service are extracted to the modules directory.
+- Second all the latest releases from your repositories are extracted to the modules directory.
+
 #Common Issues
 ###Update process successfully completed but update did not apply
 If a module has been added to your modules directory via FTP or not via lemonstands update manager, the files may not be PHP writable.
