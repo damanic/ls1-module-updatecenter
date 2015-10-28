@@ -1,6 +1,6 @@
 #Update Center: Lemonstand Version 1
 ###Update modules from GitHub using the backend `Modules & Updates' tool! 
-This module also allows you to continue using lemonstand marketplace updates when core modules have been updated beyond lemonstands last version.
+This module also allows you to continue to receive lemonstand marketplace updates even if you have updated your core modules beyond Lemonstand's last version release.
 
 #Install
 Install this module through the marketplace as normal. Once installed:
