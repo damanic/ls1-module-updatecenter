@@ -39,5 +39,40 @@ class updateCenter_Helper {
 		return version_compare($new_version, $old_version, '>');
 	}
 
+	public static function check_core_compatible(){
+		$core_um_location = PATH_APP.'/modules/core/classes/core_updatemanager.php';
+		$core_um_file_content = file_get_contents($core_um_location);
+		$pclzip_lib_location = PATH_APP.'/modules/core/thirdpart/pclzip.lib.php';
+		$pclzip_lib_file_content = file_get_contents($pclzip_lib_location);
+
+		$required_core_code = array(
+			'function get_blocked_update_modules(',
+			'core:onAfterGetModuleVersions',
+			'core:onGetBlockedUpdateModules',
+			'core:onAfterRequestUpdateList',
+			'function request_lemonstand_update_list(',
+			'core:onFetchSoftwareUpdateFiles'
+		);
+
+
+
+		if( $core_um_file_content === false || $pclzip_lib_file_content === false) {
+			throw new Phpr_Application_Exception('Could not read contents of required files in the core module. Please check files exists and is available to file_get_contents(): '.$core_um_location,' | '.$pclzip_lib_location);
+		}
+
+		foreach($required_core_code as $string){
+			if(strpos($core_um_file_content, $string) === false){
+				return false;
+			}
+		}
+
+		if(strpos($core_um_file_content, $string) === false){
+			return false;
+		}
+
+
+		return true;
+	}
+
 
 }

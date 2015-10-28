@@ -1,0 +1,17 @@
+<h4>Update Center Compatibility Status:</h4>
+<?
+$updater = new UpdateCenter_CoreUpdate();
+
+try{
+ $this->check_required_files();
+?>
+
+<p>Core Update Manager <?= $updater->check_compatible_core_um() ? '<span style="color: green">YES</span>' : '<span style="color: red">NO</span>' ?></p>
+<p>Core Zip Helper <?= $updater->check_compatible_ziphelper() ? '<span style="color: green">YES</span>' : '<span style="color: red">NO</span>' ?></p>
+<p>PclZip Library  <?= $updater->check_compatible_pclzip_lib() ? '<span style="color: green">YES</span>' : '<span style="color: red">NO</span>' ?></p>
+
+
+<?
+} catch (Exception $e){
+ echo '<p class="warning">Compatibility Check Error: '.$e->getMessage().'</p>';
+}

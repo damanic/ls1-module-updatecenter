@@ -40,6 +40,8 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	{
 		$this->add_form_field('repository_config')->renderAs(frm_dropdown)->tab('Update Source')->comment('Select the repository config file you would like to use for updates', 'above');
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_disable_module_checkboxes.htm')->tab('Block Updates');
+		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_status.htm')->tab('Status');
+
 	}
 
 	public function has_active_repository(){
