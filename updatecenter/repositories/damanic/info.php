@@ -13,15 +13,15 @@
 					),
 					'core' => array(
 						'owner' => 'damanic',
-						'repo' => 'ls1-module-core'
+						'repo' => 'ls1-module-core',
 					),
 					'cms' => array(
 						'owner' => 'damanic',
-						'repo' => 'ls1-module-cms'
+						'repo' => 'ls1-module-cms',
 					),
 					'updatecenter' => array(
 						'owner' => 'damanic',
-						'repo' => 'ls1-module-updatecenter'
+						'repo' => 'ls1-module-updatecenter',
 					)
 				)
 			)

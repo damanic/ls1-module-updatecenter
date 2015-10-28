@@ -2,6 +2,7 @@
 class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver implements UpdateCenter_Repository_Interface {
 
 	protected $releases_uri = 'https://api.github.com/repos/{owner}/{repo}/releases/latest';
+	protected $source_uri = 'https://api.github.com/repos/{owner}/{repo}/zipball/{branch}';
 	protected $markdown_uri  = 'https://api.github.com/markdown';
 	protected $cache;
 
@@ -39,11 +40,23 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 	}
 
 	public function get_latest_version_zip_url($module_name){
+		$repo_details = $this->module_info[$module_name];
+
+		//allow override to branch zipball for bleeding edge updates
+		if(!empty($repo_details['git_use_branch'])){
+			return $this->get_branch_zipball_url($repo_details['repo'],$repo_details['owner'],$repo_details['git_use_branch']);
+		}
+
 		$asset = $this->get_latest_version_zip_info($module_name);
 		return $asset['browser_download_url'];
 	}
 
 	public function get_latest_version_zip_size($module_name){
+
+		if(!empty($repo_details['git_use_branch'])) { //downloading latest source, size unknown
+			return 0;
+		}
+
 		$asset = $this->get_latest_version_zip_info($module_name);
 		return $asset['size'];
 	}
@@ -73,6 +86,15 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		$uri = str_replace('{repo}',$repo, $uri);
 		return $uri;
 	}
+
+	protected function get_branch_zipball_url($repo,$owner,$branch){
+		$uri = str_replace('{owner}',$owner, $this->source_uri);
+		$uri = str_replace('{repo}',$repo, $uri);
+		$uri = str_replace('{branch}',$branch, $uri);
+		return $uri;
+	}
+
+
 	protected function request_server_data($url, $fields = array())
 	{
 		$result = null;

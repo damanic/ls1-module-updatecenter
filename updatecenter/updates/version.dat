@@ -10,3 +10,4 @@
 #1.2.0 Marketplace release
 #1.2.1 Github release, restructured to facilitate source zip download -> install
 #1.2.2 Allow for forced updates from repositories.
+#1.2.3 Git Driver accepts 'git_use_branch' as parameter in config to use a branches current source (bleeding edge updates)).
