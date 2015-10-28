@@ -8,3 +8,4 @@
 #1.1.3 bugfix
 #1.1.4 Added patch option to make core compatible
 #1.2.0 Marketplace release
+#1.2.1 Github release, restructured to facilitate source zip download -> install
