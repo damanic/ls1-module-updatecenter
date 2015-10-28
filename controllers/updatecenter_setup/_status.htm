@@ -1,15 +1,29 @@
-<h4>Update Center Compatibility Status:</h4>
-<?
-$updater = new UpdateCenter_CoreUpdate();
+<h4>Core Compatibility Status:</h4>
+<ul class="formElements">
 
+ <li id="ga_hint">
+  <div class="hint">
+   <p class="last">If you are running the last lemonstand release of the core module you will need to update it for repository updates to work. If presented, the update button below will patch your core module with the libs and events required to run this module. Alternatively you can copy/merge the latest core release that supports this module from github: https://github.com/damanic/ls1-module-core </p>
+  </div>
+ </li>
+
+</ul>
+<?
 try{
  $updater->check_required_files();
 ?>
 
-<p>Core Update Manager <?= $updater->check_compatible_core_um() ? '<span style="color: green">YES</span>' : '<span style="color: red">NO</span>' ?></p>
-<p>Core Zip Helper <?= $updater->check_compatible_ziphelper() ? '<span style="color: green">YES</span>' : '<span style="color: red">NO</span>' ?></p>
-<p>PclZip Library  <?= $updater->check_compatible_pclzip_lib() ? '<span style="color: green">YES</span>' : '<span style="color: red">NO</span>' ?></p>
+<p>Core Update Manager <?= $updater->check_compatible_core_um() ? '<span style="color: green">Compatible</span>' : '<span style="color: red">Requires Update</span>' ?></p>
+<p>Core Zip Helper <?= $updater->check_compatible_ziphelper() ? '<span style="color: green">Compatible</span>' : '<span style="color: red">Requires Update</span>' ?></p>
+<p>PclZip Library  <?= $updater->check_compatible_pclzip_lib() ? '<span style="color: green">Compatible</span>' : '<span style="color: red">Requires Update</span>' ?></p>
 
+<? if(!$updater->is_compatible()){ ?>
+  <div class="button">
+   <a href="#" onclick="$(this).getForm().sendPhpr('index_onPatch', {loadIndicator: {hideOnSuccess: true}, update: $(this).getForm().getElement('div.formFlash'),  preCheckFunction: function(){
+              return confirm('This patch will overwrite three files in modules/core. Continue?');
+              }}); return false;" class="tooltip">Apply Patch</a>
+  </div>
+<? } ?>
 
 <?
 } catch (Exception $e){

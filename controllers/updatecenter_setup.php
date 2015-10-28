@@ -29,6 +29,7 @@
 				
 				$this->edit($record->id);
 				$this->app_page_title = $this->form_edit_title;
+				$this->viewData['updater'] = new UpdateCenter_CoreUpdate();
 			}
 			catch (exception $ex)
 			{
@@ -58,6 +59,12 @@
 		{
 			$record = UpdateCenter_Config::get();
 			$this->edit_onCancel($record->id);
+		}
+
+		protected function index_onPatch(){
+				$updater = new UpdateCenter_CoreUpdate();
+				$updater->make_compatible();
+				Phpr::$response->redirect(url('updatecenter/setup'));
 		}
 	}
 

@@ -8,6 +8,16 @@
 
 	<? if (!isset($fatalError)): ?>
 		<div class="form600">
+			<?
+				if(!$updater->is_compatible()){ ?>
+			<form onsubmit="return false;">
+				<div class="hint">
+					<p class="last">Core updates required. Check status tab</p></a>
+				</div>
+			</form>
+			<?
+				}
+			?>
 			<?= Phpr_Form::openTag() ?>
 				<? $this->formRender() ?>
 
