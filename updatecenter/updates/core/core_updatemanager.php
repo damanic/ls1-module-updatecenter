@@ -149,15 +149,16 @@
 			return $response;
 		}
 
-		public function request_update_list()
+		public function request_update_list($hash = null, $force = false)
 		{
 			if (Phpr::$config->get('FREEZE_UPDATES'))
 				throw new Exception("We are sorry, updates were blocked by the system administrator.");
 
-			$response = $this->request_lemonstand_update_list();
+			$response = $this->request_lemonstand_update_list($hash, $force);
 
 			$response = Backend::$events->fire_event(array('name' => 'core:onAfterRequestUpdateList', 'type' => 'filter'), array(
 				'update_list' => $response,
+				'force' => $force,
 			));
 
 			return $response['update_list'];
@@ -231,6 +232,7 @@
 			//allow for other modules to provide updates
 			$files = Backend::$events->fire_event(array('name' => 'core:onFetchSoftwareUpdateFiles', 'type' => 'filter'), array(
 				'files' => $ls_files,
+				'force' => $force,
 			));
 			$files = $files['files'];
 

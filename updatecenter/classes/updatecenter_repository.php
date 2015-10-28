@@ -35,7 +35,7 @@ class UpdateCenter_Repository {
 		return $latest_versions;
 	}
 
-	public function get_repository_updates(){
+	public function get_repository_updates($force=false){
 		$updates = array();
 
 		$repo = new UpdateCenter_Repository();
@@ -43,7 +43,7 @@ class UpdateCenter_Repository {
 		$latest_versions = $repo->get_latest_versions();
 
 		foreach($latest_versions as  $module_name => $new_version_info){
-			if(UpdateCenter_Helper::is_version_newer($new_version_info['version'],$installed_versions[$module_name]['version'])){
+			if($force || UpdateCenter_Helper::is_version_newer($new_version_info['version'],$installed_versions[$module_name]['version'])){
 				$obj = new stdClass();
 				$obj->name = $installed_versions[$module_name]['info']->name;
 				$obj->updates = array($new_version_info['version'] => $new_version_info['description']);

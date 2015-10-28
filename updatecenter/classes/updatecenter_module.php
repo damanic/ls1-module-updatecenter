@@ -41,13 +41,15 @@ class updateCenter_Module extends Core_ModuleBase {
 	}
 
 	public function add_repository_update_files($data){
+		$data['force'] = $data['force'] ? true : false;
 		$config = UpdateCenter_Config::get();
+
 		if(!$config->has_active_repository()){
 			return $data;
 		}
 
 		$repo = new UpdateCenter_Repository();
-		$updates = $repo->get_repository_updates();
+		$updates = $repo->get_repository_updates($data['force']);
 		foreach($updates as $module_name => $obj){
 			$file = $repo->download_update_to_temp($module_name);
 			$has_version = Core_ZipHelper::findFile('updates/version.dat', $file);
@@ -67,14 +69,16 @@ class updateCenter_Module extends Core_ModuleBase {
 
 
 	public function add_repository_updates($data){
+		$data['force'] = $data['force'] ? true : false;
 		$config = UpdateCenter_Config::get();
+
 		if(!$config->has_active_repository()){
 			return $data;
 		}
 
 		$config = UpdateCenter_Config::get();
 		$repo = new UpdateCenter_Repository();
-		$updates = $repo->get_repository_updates();
+		$updates = $repo->get_repository_updates($data['force']);
 
 		if(!count($updates)){
 			return $data;
