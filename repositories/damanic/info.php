@@ -1,7 +1,7 @@
 <?
 	$repository_info = array(
-		'name'=>'daManic Github Updates',
-		'description'=>'Community updates to core modules',
+		'name'=>'Core Module Updates (daManic)',
+		'description'=>'Updates to core modules no longer updated by lemonstand (cms,shop,core,etc). Plus updates to the updatecenter module.',
 
 		'repositories' => array(
 			array(

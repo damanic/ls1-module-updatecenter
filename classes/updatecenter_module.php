@@ -6,7 +6,7 @@ class updateCenter_Module extends Core_ModuleBase {
 	protected function createModuleInfo() {
 		return new Core_ModuleInfo(
 			"Update Center",
-			"Alternative update options",
+			"Allows modules to be updated from public repositories",
 			"Matt Manning (github:damanic)"
 		);
 	}
@@ -16,12 +16,12 @@ class updateCenter_Module extends Core_ModuleBase {
 		$result = array(
 			array(
 				'icon'=>'/modules/updatecenter/resources/images/fork.png',
-				'title'=>'Custom Updates',
+				'title'=>'Repo Updates',
 				'url'=>'/updatecenter/setup',
-				'description'=>'Allow modules to be updated from public repositories or block modules from being updated by lemonstand',
+				'description'=>'Configure options to update modules from public repositories',
 				'sort_id'=>250,
 				'section'=>'System'
-			),
+			),1
 		);
 
 
