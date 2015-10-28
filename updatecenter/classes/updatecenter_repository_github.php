@@ -59,6 +59,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 
 		$asset = $this->get_latest_version_zip_info($module_name);
 		return $asset['size'];
+
 	}
 
 

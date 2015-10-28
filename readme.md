@@ -86,7 +86,7 @@ The repo updates will only update modules in the /module/ directory. It does not
 - Set from 'block' tab in :  {youradminurl}/updatecenter/setup/
 - Select any module that you would like the update center to block from receiving updates. This applies to both repo and the lemonstand update delivery service.
 
-#Common Issue
+#Common Issues
 ###Update process successfully completed but update did not apply
 If a module has been added to your modules directory via FTP or not via lemonstands update manager, the files may not be PHP writable.
 Any file in a module directory that is not PHP writable will not be updated. Be sure to CHMOD the files and folders in your /modules directory so that it is PHP writable after any manual file upload.
