@@ -112,7 +112,8 @@ If you are adding your own repo as a source to update a module there are a few t
 	
 ```
 As you can see all you need to do is add the parameter 'git_use_branch' and set it to the branch you want to update from.
-NOTE: Because there is no release version no updates will be found, so to apply the branch updates you need to 'Force Update'.  
+
+NOTE: Because a branch has no release version no updates will be found, so to update from a branch you need to use 'Force Update'.  
  
 #Limitations
 The repo updates will only update modules in the `/module/` directory. It does not support updates to the framework outside of this directory.
@@ -125,6 +126,7 @@ The repo updates will only update modules in the `/module/` directory. It does n
 Using the forced update button when no updates are found forces lemonstand to re-download the modules and overwite them: 
 - First all the final/latest releases from the lemonstand update service are extracted to the modules directory.
 - Second all the latest releases from your repositories are extracted to the modules directory.
+
 Before running a forced update you should consider blocking updates to any lemonstand module that you have changed locally and not assigned to a repository - otherwise your changes may be overwritten.
 
 #Common Issues
