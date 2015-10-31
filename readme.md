@@ -130,7 +130,7 @@ Using the forced update button when no updates are found forces lemonstand to re
 Before running a forced update you should consider blocking updates to any lemonstand module that you have changed locally and not assigned to a repository - otherwise your changes may be overwritten.
 
 #Restoring Core Lemonstand Versions
-If at some point you want to revert back to the last module release from Lemonstand you can do this by removing the repository config selection in `{youradminurl}/updatecenter/setup/` and then doing a forced update. 
+If at some point you want to revert back to the last set of module releases from Lemonstand you can do this by removing the repository config selection in `{youradminurl}/updatecenter/setup/` and then doing a forced update. 
 Note: This will overwrite all code changes made to your core modules. If repository updates made any changes to the database schema or added any any files, they will not be rolled back or removed.
 
 #Common Issues
