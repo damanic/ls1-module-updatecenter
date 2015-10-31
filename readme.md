@@ -15,13 +15,12 @@ Install this module through the marketplace as normal. Once installed:
 #Core Patch
 The lemonstand module located at `/modules/core` is no longer receiving updates from Lemonstand. In order to use this module the core module requires a patch. This patch replaces three files:
 
-- `/modules/core/helpers/core_ziphelper.php`
-- `/modules/core/classes/core_updatemanager.php`
-- `/modules/core/thirdpart/pclzip.lib.php`
+- [/modules/core/helpers/core_ziphelper.php](https://github.com/damanic/ls1-module-updatecenter/blob/master/updatecenter/updates/core/core_ziphelper.php)
+- [/modules/core/classes/core_updatemanager.php](https://github.com/damanic/ls1-module-updatecenter/blob/master/updatecenter/updates/core/core_updatemanager.php)
+- [/modules/core/thirdpart/pclzip.lib.php](https://github.com/damanic/ls1-module-updatecenter/blob/master/updatecenter/updates/core/pclzip.lib.php)
 
 It adds new trigger events to Core_UpdateManager, a new function to the zip helper and upgrades to the latest PclZip library.
-
-If you have made your own edits to these files since the final lemonstand release you can manually install/compare the files included in `/modules/updatecenter/updates/core/`
+If you have made your own edits to these files since the final Lemonstand release you can manually compare/update them.
 
 #GitHub Repository Updates
 Update one or more versioned modules in the `/modules/` directory from public GitHub releases.
