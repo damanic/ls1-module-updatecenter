@@ -131,7 +131,7 @@ Before running a forced update you should consider blocking updates to any lemon
 
 #Restoring Core Lemonstand Versions
 If at some point you want to revert back to the last set of module releases from Lemonstand you can do this by removing the repository config selection in `{youradminurl}/updatecenter/setup/` and then doing a forced update. 
-Note: This will overwrite all code changes made to your core modules. If repository updates made any changes to the database schema or added any files, they will not be rolled back or removed.
+Note: This will overwrite all code changes made to your core modules AND the underlying Lemonstand (phproad) framework. If repository updates made any changes to the database schema or added any files, they will not be rolled back or removed.
 
 #Common Issues
 ###Update process successfully completed but update did not apply
