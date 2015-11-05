@@ -4,7 +4,6 @@
 This module also allows you to continue to receive lemonstand marketplace updates even if you have updated your core modules beyond Lemonstand's last version release.
 
 #Install
-Install this module through the marketplace as normal. Once installed:
 
 - Download the latest release zip/tar archive: https://github.com/damanic/ls1-module-updatecenter/releases
 - Unzip so the folder `updatecenter` is added to your `/modules` directory
