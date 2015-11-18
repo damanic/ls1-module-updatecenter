@@ -54,12 +54,6 @@
 			$record->save();
 			$this->edit_onSave( $record->id );
 		}
-		
-		protected function index_onCancel()
-		{
-			$record = UpdateCenter_Config::get();
-			$this->edit_onCancel($record->id);
-		}
 
 		protected function index_onPatch(){
 				$updater = new UpdateCenter_CoreUpdate();
