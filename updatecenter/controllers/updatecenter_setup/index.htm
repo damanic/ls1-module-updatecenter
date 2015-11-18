@@ -22,7 +22,7 @@
 				<? $this->formRender() ?>
 
 				<?= backend_ajax_button('Save', 'index_onSave', array(), "prepareFunction: function(){phprTriggerSave();}") ?>
-				<?= backend_button('Cancel', url('system/settings')) ?>
+				<?= backend_ajax_button('Cancel', 'index_onCancel') ?>
 				<div class="clear"></div>
 			</form>
 		</div>
