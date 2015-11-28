@@ -15,7 +15,7 @@ class updateCenter_Helper {
 		return $new_zip;
 	}
 
-	public function is_old_ls_version($module_name,$version){
+	public static function is_old_ls_version($module_name,$version){
 
 		$current_version = $version;
 		$last_ls_version = UpdateCenter_Config::get_last_ls_version($module_name);
