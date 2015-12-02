@@ -37,7 +37,7 @@
 					),
 					'shop' => array(
 						'owner' => 'damanic',
-						'repo' => 'ls1-module-backend',
+						'repo' => 'ls1-module-shop',
 						'default_allow_update' => false,
 						'view_info_url' => 'https://github.com/damanic/ls1-module-shop/blob/master/readme.md',
 						'view_releases_url' => 'https://github.com/damanic/ls1-module-shop/releases',
