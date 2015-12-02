@@ -18,9 +18,6 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	public static $loadedInstance = null;
 	public $repo_info = array();
 
-	public function __construct(){
-		$this->repo_info = $this->get_repository_info();
-	}
 
 	public static function create($values = null)
 	{
@@ -110,12 +107,17 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	{
 
 		$repo_config_id = empty($config_id) ? $this->repository_config : $config_id;
+
+		if(isset($this->repo_info[$repo_config_id])){
+			return $this->repo_info[$repo_config_id];
+		}
+
 		$repos = $this->list_repository_options();
 
 		if (!array_key_exists($repo_config_id, $repos))
 			throw new Phpr_ApplicationException('Repository config '.$repo_config_id.' not found. Please select existing config option on the System/Settings/Custom Updates page.');
 
-		return $repos[$repo_config_id];
+		return $this->repo_info[$repo_config_id] = $repos[$repo_config_id];
 	}
 
 	public function get_blocked_modules(){
@@ -128,11 +130,9 @@ class UpdateCenter_Config extends Db_ActiveRecord
 
 	public function get_available_updates($config_id=null){
 		$updates = array();
-		if(!empty($config_id)){
-			$repo_info = $this->repo_info;
-		} else {
-			$repo_info = $this->get_repository_info($config_id);
-		}
+
+		$repo_info = $this->get_repository_info($config_id);
+
 		foreach ($repo_info['repositories'] as $repository_data) {
 			$source = $repository_data['source'];
 			foreach ( $repository_data['modules'] as $module_id => $update_info ) {

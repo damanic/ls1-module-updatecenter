@@ -17,7 +17,7 @@ class UpdateCenter_Repository {
 	public function get_latest_versions(){
 		$latest_versions = array();
 
-			$repo_info = $this->config->repo_info;
+			$repo_info = $this->config->get_repository_info();
 			foreach ( $repo_info['repositories'] as $id => $info ) {
 				$source       = $info['source'];
 				$driver_class = 'UpdateCenter_Repository_' . $source;
@@ -128,7 +128,7 @@ class UpdateCenter_Repository {
 
 	public function load_driver_for($module_name, $source=null){
 
-		$repo_info = $this->config->repo_info;
+		$repo_info = $this->config->get_repository_info();
 		foreach($repo_info['repositories'] as $id => $info){
 			if(!empty($source) && $source !== $info['source']){
 				continue;
