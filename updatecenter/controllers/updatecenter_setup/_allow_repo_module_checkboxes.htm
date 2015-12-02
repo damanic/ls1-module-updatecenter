@@ -1,0 +1,45 @@
+<div id="updatecenter_available_updates">
+<?
+if($available_updates){
+?>
+	<?
+	foreach ($available_updates as $source => $update){
+	?>
+	<hr/>
+	<h4 style="margin-top: 5px; margin-bottom: 0px;">Available Updates: <?= $source ?></h4>
+	<p> Tick the repositories you would like to allow updates from</p>
+<ul class="formElements">
+		<?
+		foreach($update as $module_id => $update_info){
+			$checked = $update_info['allowed_update'] ? 'checked="checked"' : null;
+		?>
+
+			<li id="form_field_updatecenter_module_<?=$source?>_<?= $module_id ?>>" class="field checkbox full ?> ">
+
+				<label for="UpdateCenter_Config_allow_repo_update_<?=$source?>_<?= $module_id ?>">
+					<b><?=$module_id?></b> <br/>
+					<i><?=$update_info['owner']?> / <?= $update_info['repo'] ?></i>
+				</label>
+
+
+				<div id="form_field_container_updatecenter_module_<?=$source?>_<?= $module_id ?>" class="fieldContainer ">
+
+					<div tabindex="0" class="checkbox"></div>
+					<input id="UpdateCenter_Config_allow_repo_update_<?=$source?>_<?= $module_id ?>" name="UpdateCenter_Config[allow_repo_update_<?=$source?>_<?= $module_id ?>]" value="1" class="checkbox hidden" type="checkbox" <?=$checked?>>
+
+				</div>
+
+				<p class="minorCommentAfter">
+					<?if(isset($update_info['view_info_url']) && !empty($update_info['view_info_url'])){?> <a href="<?=$update_info['view_info_url']?>" target="_blank">Readme</a><?}?>
+					<?if(isset($update_info['view_releases_url']) && !empty($update_info['view_releases_url'])){?> | <a href="<?=$update_info['view_releases_url']?>" target="_blank">Releases</a><?}?>
+				</p>
+				<div class="clear"></div>
+			</li>
+
+		<?}?>
+	</ul>
+	<?}?>
+
+<?}?>
+
+</div>

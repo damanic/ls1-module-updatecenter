@@ -30,6 +30,15 @@
 				$this->edit($record->id);
 				$this->app_page_title = $this->form_edit_title;
 				$this->viewData['updater'] = new UpdateCenter_CoreUpdate();
+				$this->viewData['available_updates']  =  false;
+
+				$config = UpdateCenter_Config::get();
+				if($config->has_active_repository() || post('config_switch', false)){
+					$this->viewData['available_updates']  =  $config->get_available_updates(post('config_switch', null));
+				}
+				if(post('config_switch', false)){
+					$this->renderPartial('allow_repo_module_checkboxes');
+				}
 			}
 			catch (exception $ex)
 			{
@@ -40,9 +49,10 @@
 		protected function index_onSave()
 		{
 			$record = UpdateCenter_Config::get();
+
+			//GATHER BLOCKED MODULES
 			$modules = Core_ModuleManager::listModules();
 			$blocked_modules = array();
-
 			foreach ($modules as $module) {
 				$module_id   = mb_strtolower( $module->getId() );
 				if(post_array_item('UpdateCenter_Config','block_module_'.$module_id, false)){
@@ -51,6 +61,21 @@
 
 			}
 			$record->blocked_modules = implode(',',$blocked_modules);
+
+			//GATHER APPROVED REPO UPDATES
+			$repo_config_set = post_array_item('UpdateCenter_Config','repository_config', false);
+			if($repo_config_set){
+				$selected_updates = array();
+				$available_updates = $record->get_available_updates($repo_config_set);
+				foreach ($available_updates as $source => $update){
+					foreach($update as $module_id => $update_info){
+						$selected_updates[$source][$module_id] = post_array_item('UpdateCenter_Config','allow_repo_update_'.$source.'_'.$module_id, 0);
+					}
+				}
+				$record->repo_allowed_updates = serialize($selected_updates);
+			} else {
+				$record->repo_allowed_updates = null;
+			}
 			$record->save();
 			$this->edit_onSave( $record->id );
 		}

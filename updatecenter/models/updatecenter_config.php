@@ -8,6 +8,8 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		'backend' => '1.9.29',
 		'core' => '1.11.97',
 		'system' => '1.3.13',
+		'users' => '1.0.25',
+		'blog' => '1.0.47',
 	);
 
 
@@ -34,11 +36,13 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	{
 		$this->define_column('blocked_modules', 'Blocked Module Updates');
 		$this->define_column('repository_config', 'Repository Config');
+		$this->define_column('repo_allowed_updates', 'Allowed Updates');
 	}
 
 	public function define_form_fields($context = null)
 	{
 		$this->add_form_field('repository_config')->renderAs(frm_dropdown)->tab('Update Source')->comment('Select the repository config file you would like to use for updates. Config files can be added/edited in the folder: /modules/updatecenter/repositories', 'above');
+		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_allow_repo_module_checkboxes.htm')->tab('Update Source');
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_disable_module_checkboxes.htm')->tab('Block Updates');
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_status.htm')->tab('Status');
 
@@ -98,9 +102,10 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		return $result;
 	}
 
-	public function get_repository_info()
+	public function get_repository_info($config_id=null)
 	{
-		$repo_config_id = $this->repository_config;
+
+		$repo_config_id = empty($config_id) ? $this->repository_config : $config_id;
 		$repos = $this->list_repository_options();
 
 		if (!array_key_exists($repo_config_id, $repos))
@@ -112,6 +117,39 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	public function get_blocked_modules(){
 		return explode(',',$this->blocked_modules);
 	}
+
+	public function get_allowed_updates(){
+		return unserialize($this->repo_allowed_updates);
+	}
+
+	public function get_available_updates($config_id=null){
+		$updates = array();
+		$repo_info = $this->get_repository_info($config_id);
+		foreach ($repo_info['repositories'] as $repository_data) {
+			$source = $repository_data['source'];
+			foreach ( $repository_data['modules'] as $module_id => $update_info ) {
+				$updates[$source][$module_id] = $update_info;
+				$updates[$source][$module_id]['allowed_update'] = $this->is_allowed_update($source, $module_id, $update_info);
+			}
+		}
+		return $updates;
+	}
+
+	public function is_allowed_update($source, $module_id, $update_info = null){
+		$allowed = $this->get_allowed_updates();
+		if(is_array($allowed)) {
+			if ( isset( $allowed[$source][$module_id] ) ) {
+				return $allowed[$source][$module_id] ? true : false;
+			}
+		}
+
+		if ( is_array( $update_info ) ) {
+			return isset( $update_info['default_allow_update'] ) ? $update_info['default_allow_update'] : false;
+		}
+
+		return false;
+	}
+
 
 	public function is_blocked_module($module_name){
 

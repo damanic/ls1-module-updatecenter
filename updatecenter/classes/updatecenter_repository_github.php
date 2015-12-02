@@ -43,7 +43,15 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		$repo_details = $this->module_info[$module_name];
 
 		//allow override to branch zipball for bleeding edge updates
-		if(!empty($repo_details['git_use_branch'])){
+		if(!empty($repo_details['edge_updates'])){
+			$repo_edge = $repo_details['edge_updates'];
+			$edge_owner = empty($repo_edge['owner'])? $repo_details['owner'] : $repo_edge['owner'];
+			$edge_repo =  empty($repo_edge['repo'])? $repo_details['repo'] : $repo_edge['repo'];
+			$edge_branch =  empty($repo_edge['branch'])? 'master': $repo_edge['branch'];
+			return $this->get_branch_zipball_url($edge_repo,$edge_owner,$edge_branch);
+		}
+		else if(!empty($repo_details['git_use_branch'])){
+			//git_use_branch deprecated
 			return $this->get_branch_zipball_url($repo_details['repo'],$repo_details['owner'],$repo_details['git_use_branch']);
 		}
 

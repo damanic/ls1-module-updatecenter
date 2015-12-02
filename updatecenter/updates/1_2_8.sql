@@ -1,0 +1,1 @@
+ALTER TABLE updatecenter_config ADD COLUMN repo_allowed_updates TEXT;

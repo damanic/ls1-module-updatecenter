@@ -6,11 +6,11 @@ class UpdateCenter_Repository {
 	protected $cache;
 
 	public function __construct(){
-		$this->load_repository_info();
+		$this->load_config();
 	}
 
-	public function load_repository_info(){
-		$this->config = UpdateCenter_Config::get()->get_repository_info();
+	public function load_config(){
+		$this->config = UpdateCenter_Config::get();
 	}
 
 
