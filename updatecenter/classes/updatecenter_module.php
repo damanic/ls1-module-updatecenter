@@ -53,7 +53,8 @@ class updateCenter_Module extends Core_ModuleBase {
 		foreach($updates as $module_name => $obj){
 			$file = $repo->download_update_to_temp($module_name);
 			$has_version = Core_ZipHelper::findFile('updates/version.dat', $file);
-			if($has_version){
+			$has_correct_module_class = Core_ZipHelper::findFile('classes/'.$module_name.'_module.php', $file);
+			if($has_version && $has_correct_module_class){
 				if($has_version['filename'] == 'modules/'.$module_name.'/updates/version.dat') {
 					//archive is in correct folder structure, pass directly to update
 					$data['files'][] = $file;
@@ -62,7 +63,10 @@ class updateCenter_Module extends Core_ModuleBase {
 					$root_folder = str_replace('updates/version.dat','',$has_version['filename']);
 					$data['files'][] = UpdateCenter_Helper::repackage_archive($module_name,$file,$root_folder);
 				}
+			} else {
+				traceLog('The repository archive for '.$module_name.' is missing the version.dat and/or '.$module_name.'_module.php file' );
 			}
+
 		}
 		return $data;
 	}
@@ -86,9 +90,6 @@ class updateCenter_Module extends Core_ModuleBase {
 
 		foreach($updates as $module_name => $obj){
 			$data['update_list']['data'][$module_name] = $obj;
-			if($config->is_blocked_module($module_name)){
-				unset($data['update_list']['data'][$module_name]);
-			}
 		}
 
 		return $data;
