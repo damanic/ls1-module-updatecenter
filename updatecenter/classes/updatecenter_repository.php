@@ -18,7 +18,7 @@ class UpdateCenter_Repository {
 		$latest_versions = array();
 
 			$this->config = UpdateCenter_Config::get()->get_repository_info();
-			foreach ( $this->config['repositories'] as $id => $info ) {
+			foreach ( $repo_info['repositories'] as $id => $info ) {
 				$source       = $info['source'];
 				$driver_class = 'UpdateCenter_Repository_' . $source;
 				if ( !class_exists( $driver_class ) ) {
@@ -27,9 +27,11 @@ class UpdateCenter_Repository {
 				$driver = new $driver_class( $info['modules'] );
 
 				foreach ( $info['modules'] as $module_name => $module_info ) {
-					$latest_versions[$module_name]['version'] = $driver->get_latest_version_number( $module_name );
-					$latest_versions[$module_name]['description'] = $source.'/'.$module_info['owner'].'/'.$module_info['repo'].': '.$driver->get_latest_version_description( $module_name );
-					$latest_versions[$module_name]['source'] = $source;
+					if($this->config->is_allowed_update($source,$module_name,$module_info)) {
+						$latest_versions[$module_name]['version']     = $driver->get_latest_version_number( $module_name );
+						$latest_versions[$module_name]['description'] = $source . '/' . $module_info['owner'] . '/' . $module_info['repo'] . ': ' . $driver->get_latest_version_description( $module_name );
+						$latest_versions[$module_name]['source']      = $source;
+					}
 				}
 			}
 		return $latest_versions;
@@ -118,7 +120,8 @@ class UpdateCenter_Repository {
 
 	public function load_driver_for($module_name){
 
-		foreach($this->config['repositories'] as $id => $info){
+		$repo_info = $this->config->get_repository_info();
+		foreach($repo_info['repositories'] as $id => $info){
 			$source = $info['source'];
 			foreach($info['modules'] as $module_id => $module_details){
 				if($module_name == $module_id){

@@ -15,4 +15,4 @@
 #1.2.5 Commented out git:damanic:ls1-module-shop from default config file.
 #1.2.6 Bugfix: Fixed cancel button on setup controller. https://github.com/damanic/ls1-module-updatecenter/issues/2
 #1.2.7 Fix for updateCenter_Helper. Fixes damanic/ls1-module-updatecenter#4
-#1.2.8 Added support for edge updates from forks, plus more user control over which repos to use on backend settings
+#1.2.8|1_2_8 Added support for edge updates from forks, plus more user control over which repos to use on backend settings
