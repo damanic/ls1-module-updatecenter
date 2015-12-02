@@ -16,7 +16,11 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	protected $api_added_columns = array();
 	public $table_name = 'updatecenter_config';
 	public static $loadedInstance = null;
+	public $repo_info = array();
 
+	public function __construct(){
+		$this->repo_info = $this->get_repository_info();
+	}
 
 	public static function create($values = null)
 	{
@@ -124,7 +128,11 @@ class UpdateCenter_Config extends Db_ActiveRecord
 
 	public function get_available_updates($config_id=null){
 		$updates = array();
-		$repo_info = $this->get_repository_info($config_id);
+		if(!empty($config_id)){
+			$repo_info = $this->repo_info;
+		} else {
+			$repo_info = $this->get_repository_info($config_id);
+		}
 		foreach ($repo_info['repositories'] as $repository_data) {
 			$source = $repository_data['source'];
 			foreach ( $repository_data['modules'] as $module_id => $update_info ) {
@@ -162,6 +170,19 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	public static function is_core_module($module_name){
 		if(in_array(strtolower($module_name),self::get_core_modules())){
 			return true;
+		}
+		return false;
+	}
+
+	public function get_module_auth($module_name, $source=null){
+		foreach($this->repo_info['repositories'] as $repo_data){
+			if(!empty($source) && $repo_data['source'] !== $source){
+				continue;
+			}
+
+			if(isset($repo_data['modules'][$module_name]['auth'])){
+				return $repo_data['modules'][$module_name]['auth'];
+			}
 		}
 		return false;
 	}

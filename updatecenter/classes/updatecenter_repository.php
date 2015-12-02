@@ -17,7 +17,7 @@ class UpdateCenter_Repository {
 	public function get_latest_versions(){
 		$latest_versions = array();
 
-			$repo_info = $this->config->get_repository_info();
+			$repo_info = $this->config->repo_info;
 			foreach ( $repo_info['repositories'] as $id => $info ) {
 				$source       = $info['source'];
 				$driver_class = 'UpdateCenter_Repository_' . $source;
@@ -28,7 +28,7 @@ class UpdateCenter_Repository {
 
 				foreach ( $info['modules'] as $module_name => $module_info ) {
 					if($this->config->is_allowed_update($source,$module_name,$module_info) && !$this->config->is_blocked_module($module_name)) {
-						$latest_versions[$module_name]['version']     = $driver->get_latest_version_number( $module_name );
+						$latest_versions[$module_name]['version']     = $driver->get_latest_version_number( $module_name, $source );
 						$latest_versions[$module_name]['description'] = $source . '/' . $module_info['owner'] . '/' . $module_info['repo'] . ': ' . $driver->get_latest_version_description( $module_name );
 						$latest_versions[$module_name]['source']      = $source;
 					}
@@ -49,6 +49,7 @@ class UpdateCenter_Repository {
 				$obj = new stdClass();
 				$obj->name = $installed_versions[$module_name]['info']->name;
 				$obj->updates = array($new_version_info['version'] => $new_version_info['description']);
+				$obj->source = $new_version_info['source'];
 				$updates[$module_name] = $obj;
 			}
 		}
@@ -58,26 +59,33 @@ class UpdateCenter_Repository {
 
 
 
-	public function get_latest_version_number($module_name){
-			$repo = $this->load_driver_for( $module_name );
+	public function get_latest_version_number($module_name, $source=null){
+			$repo = $this->load_driver_for( $module_name, $source );
 			return $repo->get_latest_version_number( $module_name );
 	}
 
-	public function get_latest_version_zip_url($module_name){
-		$repo = $this->load_driver_for($module_name);
+	public function get_latest_version_zip_url($module_name, $source=null){
+		$repo = $this->load_driver_for($module_name,$source);
 		return $repo->get_latest_version_zip_url($module_name);
 	}
 
-	public function get_latest_version_zip_size($module_name){
-		$repo = $this->load_driver_for($module_name);
+	public function get_latest_version_zip_size($module_name,$source=null){
+		$repo = $this->load_driver_for($module_name,$source);
 		return $repo->get_latest_version_zip_size($module_name);
 	}
 
 
-	public function download_update_to_temp($module_name){
-		$repo = $this->load_driver_for($module_name);
+	public function download_update_to_temp($module_name, $source){
+		$repo = $this->load_driver_for($module_name, $source);
 		$remote_location = $repo->get_latest_version_zip_url($module_name);
 		$size = $repo->get_latest_version_zip_size($module_name);
+
+		$headers = array();
+		$auth = $this->config->get_module_auth($module_name, $source);
+		if(is_array($auth)){
+			array_merge($headers,$repo->get_auth_headers($auth));
+		}
+
 
 		if (!filter_var($remote_location, FILTER_VALIDATE_URL))
 			throw new Phpr_ApplicationException('Could not locate download zip file for module update ('.$module_name.') '.$remote_location);
@@ -118,10 +126,13 @@ class UpdateCenter_Repository {
 
 
 
-	public function load_driver_for($module_name){
+	public function load_driver_for($module_name, $source=null){
 
-		$repo_info = $this->config->get_repository_info();
+		$repo_info = $this->config->repo_info;
 		foreach($repo_info['repositories'] as $id => $info){
+			if(!empty($source) && $source !== $info['source']){
+				continue;
+			}
 			$source = $info['source'];
 			foreach($info['modules'] as $module_id => $module_details){
 				if($module_name == $module_id){
@@ -154,4 +165,5 @@ interface UpdateCenter_Repository_Interface {
 	public function get_latest_version_description($module_name);
 	public function get_latest_version_zip_url($module_name);
 	public function get_latest_version_zip_size($module_name);
+	public function get_auth_headers($auth);
 }

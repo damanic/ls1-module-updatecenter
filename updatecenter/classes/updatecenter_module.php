@@ -51,7 +51,7 @@ class updateCenter_Module extends Core_ModuleBase {
 		$repo = new UpdateCenter_Repository();
 		$updates = $repo->get_repository_updates($data['force']);
 		foreach($updates as $module_name => $obj){
-			$file = $repo->download_update_to_temp($module_name);
+			$file = $repo->download_update_to_temp($module_name, $obj->source);
 			$has_version = Core_ZipHelper::findFile('updates/version.dat', $file);
 			$has_correct_module_class = Core_ZipHelper::findFile('classes/'.$module_name.'_module.php', $file);
 			if($has_version && $has_correct_module_class){

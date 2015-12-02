@@ -15,7 +15,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		if(!$repo_details){
 			throw new Phpr_ApplicationException('No github repository information found for '.$module_name);
 		}
-		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']));
+		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner'], $repo_details['auth']));
 
 		if(isset($repo_data['message'])){
 			throw new Phpr_ApplicationException('Message from GitHub: '.$repo_data['message']);
@@ -91,6 +91,15 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 
 	}
 
+	public function get_auth_headers($auth){
+		$headers = array();
+		if(is_array($auth)){
+			if(isset($auth['token']) && !empty($auth['token'])){
+				$headers[] = "Authorization: token ".$auth['token'];
+			}
+		}
+	}
+
 	protected function get_latest_release_uri($repo,$owner){
 		$uri = str_replace('{owner}',$owner, $this->releases_uri);
 		$uri = str_replace('{repo}',$repo, $uri);
@@ -105,9 +114,12 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 	}
 
 
-	protected function request_server_data($url, $fields = array())
+
+
+	protected function request_server_data($url, $fields = array(), $auth = array())
 	{
 		$result = null;
+		$headers = array();
 		try
 		{
 			$poststring = array();
@@ -125,9 +137,19 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 3600);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			if(count($fields)){
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+
+			if(is_array($fields) && count($fields)){
+				$headers[] = 'Content-Type: application/json';
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+			}
+
+
+			if(is_array($auth)){
+				array_merge($headers,$this->get_auth_headers($auth));
+			}
+			if(count($headers)){
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			}
 
 
