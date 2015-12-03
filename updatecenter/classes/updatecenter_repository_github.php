@@ -91,14 +91,28 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 
 	}
 
+
 	public function get_auth_headers($auth){
+		$auth_token_set = false;
 		$headers = array();
 		if(is_array($auth)){
 			if(isset($auth['token']) && !empty($auth['token'])){
+				$auth_token_set = true;
 				$headers[] = "Authorization: token ".$auth['token'];
 			}
 		}
+
+		if(!$auth_token_set){
+			$token = UpdateCenter_Config::get()->github_auth_key;
+			if(!empty($token)){
+				$auth_token_set = true;
+				$headers[] = "Authorization: token ".$token;
+			}
+		}
+		return $headers;
 	}
+
+
 
 	protected function get_latest_release_uri($repo,$owner){
 		$uri = str_replace('{owner}',$owner, $this->releases_uri);
@@ -144,17 +158,15 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 			}
 
-
 			if(is_array($auth)){
 				array_merge($headers,$this->get_auth_headers($auth));
 			}
+
 			if(count($headers)){
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			}
 
-
 			$result = curl_exec($ch);
-
 
 			if (curl_errno($ch))
 				throw new Phpr_ApplicationException( "Error connecting the update server." );

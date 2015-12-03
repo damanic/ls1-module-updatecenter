@@ -38,6 +38,7 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		$this->define_column('blocked_modules', 'Blocked Module Updates');
 		$this->define_column('repository_config', 'Repository Config');
 		$this->define_column('repo_allowed_updates', 'Allowed Updates');
+		$this->define_column('github_auth_key', 'GitHub personal access token');
 	}
 
 	public function define_form_fields($context = null)
@@ -46,7 +47,7 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_allow_repo_module_checkboxes.htm')->tab('Update Source');
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_disable_module_checkboxes.htm')->tab('Block Updates');
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_status.htm')->tab('Status');
-
+		$this->add_form_field('github_auth_key')->tab('GitHub')->comment('The access token will be used by default for all github API communications. You do not need one to access public repositories but providing one will increase you API request limit. Setting a token for a specific repo is possible via the repo config file. Generate authentication keys from your github profile -> settings -> personal access tokens', 'above');
 	}
 
 	public function has_active_repository(){

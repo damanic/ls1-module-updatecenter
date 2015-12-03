@@ -1,0 +1,1 @@
+ALTER TABLE updatecenter_config ADD COLUMN github_auth_key VARCHAR(255);

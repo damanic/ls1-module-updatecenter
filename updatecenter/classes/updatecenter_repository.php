@@ -86,7 +86,6 @@ class UpdateCenter_Repository {
 			array_merge($headers,$repo->get_auth_headers($auth));
 		}
 
-
 		if (!filter_var($remote_location, FILTER_VALIDATE_URL))
 			throw new Phpr_ApplicationException('Could not locate download zip file for module update ('.$module_name.') '.$remote_location);
 
