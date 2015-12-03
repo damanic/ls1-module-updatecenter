@@ -176,7 +176,8 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	}
 
 	public function get_module_auth($module_name, $source=null){
-		foreach($this->repo_info['repositories'] as $repo_data){
+		$repo_info = $this->get_repository_info();
+		foreach($repo_info['repositories'] as $repo_data){
 			if(!empty($source) && $repo_data['source'] !== $source){
 				continue;
 			}

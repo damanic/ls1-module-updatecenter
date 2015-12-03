@@ -15,7 +15,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		if(!$repo_details){
 			throw new Phpr_ApplicationException('No github repository information found for '.$module_name);
 		}
-		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner'], $repo_details['auth']));
+		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), null, $repo_details['auth']);
 
 		if(isset($repo_data['message'])){
 			throw new Phpr_ApplicationException('Message from GitHub: '.$repo_data['message']);
@@ -92,7 +92,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 	}
 
 
-	public function get_auth_headers($auth){
+	public function get_auth_headers($auth=null){
 		$auth_token_set = false;
 		$headers = array();
 		if(is_array($auth)){
@@ -103,7 +103,8 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		}
 
 		if(!$auth_token_set){
-			$token = UpdateCenter_Config::get()->github_auth_key;
+			$config = UpdateCenter_Config::get();
+			$token = $config->github_auth_key;
 			if(!empty($token)){
 				$auth_token_set = true;
 				$headers[] = "Authorization: token ".$token;
@@ -158,9 +159,8 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 			}
 
-			if(is_array($auth)){
-				array_merge($headers,$this->get_auth_headers($auth));
-			}
+
+			$headers = array_merge($headers,$this->get_auth_headers($auth));
 
 			if(count($headers)){
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

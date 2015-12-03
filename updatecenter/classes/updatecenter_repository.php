@@ -82,9 +82,7 @@ class UpdateCenter_Repository {
 
 		$headers = array();
 		$auth = $this->config->get_module_auth($module_name, $source);
-		if(is_array($auth)){
-			array_merge($headers,$repo->get_auth_headers($auth));
-		}
+		$headers = array_merge($headers,$repo->get_auth_headers($auth));
 
 		if (!filter_var($remote_location, FILTER_VALIDATE_URL))
 			throw new Phpr_ApplicationException('Could not locate download zip file for module update ('.$module_name.') '.$remote_location);
@@ -100,6 +98,11 @@ class UpdateCenter_Repository {
 
 
 		$ch = curl_init($remote_location);
+
+		if(count($headers)){
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		}
+
 		curl_setopt($ch, CURLOPT_USERAGENT, "PHP/Lemonstand");
 		curl_setopt($ch, CURLOPT_FILE, $fp);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 28800);
