@@ -21,7 +21,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		}
 
 		$auth = isset($repo_details['auth']) ? $repo_details['auth'] : array();
-		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), null, $auth);
+		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), array(), $auth);
 
 		if(isset($repo_data['message'])){
 			throw new Phpr_ApplicationException('Message from GitHub: '.$repo_data['message']);
@@ -145,11 +145,13 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		{
 			$poststring = array();
 
-			foreach($fields as $key=>$val) {
-				$poststring[] = urlencode( $key ) . "=" . urlencode( $val );
+			if(is_array($fields)) {
+				foreach ( $fields as $key => $val ) {
+					$poststring[] = urlencode( $key ) . "=" . urlencode( $val );
+				}
+				$poststring = implode('&', $poststring);
 			}
 
-			$poststring = implode('&', $poststring);
 
 
 			$ch = curl_init();
