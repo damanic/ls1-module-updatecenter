@@ -21,7 +21,7 @@ class updateCenter_Module extends Core_ModuleBase {
 				'description'=>'Configure options to update modules from public repositories',
 				'sort_id'=>250,
 				'section'=>'System'
-			),1
+			),
 		);
 
 
