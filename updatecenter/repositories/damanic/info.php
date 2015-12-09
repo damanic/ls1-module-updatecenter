@@ -7,6 +7,13 @@
 			array(
 				'source' =>	'github',
 				'modules' => array(
+					'updatecenter' => array(
+						'owner' => 'damanic',
+						'repo' => 'ls1-module-updatecenter',
+						'default_allow_update' => true,
+						'view_info_url' => 'https://github.com/damanic/ls1-module-updatecenter/blob/master/readme.md',
+						'view_releases_url' => 'https://github.com/damanic/ls1-module-updatecenter/releases',
+					),
 					'core' => array(
 						'owner' => 'damanic',
 						'repo' => 'ls1-module-core',
@@ -20,13 +27,6 @@
 						'default_allow_update' => false,
 						'view_info_url' => 'https://github.com/damanic/ls1-module-cms/blob/master/readme.md',
 						'view_releases_url' => 'https://github.com/damanic/ls1-module-cms/releases',
-					),
-					'updatecenter' => array(
-						'owner' => 'damanic',
-						'repo' => 'ls1-module-updatecenter',
-						'default_allow_update' => true,
-						'view_info_url' => 'https://github.com/damanic/ls1-module-updatecenter/blob/master/readme.md',
-						'view_releases_url' => 'https://github.com/damanic/ls1-module-updatecenter/releases',
 					),
 					'backend' => array(
 						'owner' => 'damanic',

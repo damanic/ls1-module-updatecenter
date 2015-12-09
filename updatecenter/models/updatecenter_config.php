@@ -134,11 +134,16 @@ class UpdateCenter_Config extends Db_ActiveRecord
 
 		$repo_info = $this->get_repository_info($config_id);
 
-		foreach ($repo_info['repositories'] as $repository_data) {
-			$source = $repository_data['source'];
-			foreach ( $repository_data['modules'] as $module_id => $update_info ) {
-				$updates[$source][$module_id] = $update_info;
-				$updates[$source][$module_id]['allowed_update'] = $this->is_allowed_update($source, $module_id, $update_info);
+		if(isset($repo_info['repositories'])) {
+			foreach ( $repo_info['repositories'] as $repository_data ) {
+				$source = isset($repository_data['source']) ? $repository_data['source'] : null;
+				if(!isset($repository_data['modules'])){
+					continue;
+				}
+				foreach ( $repository_data['modules'] as $module_id => $update_info ) {
+					$updates[$source][$module_id]                   = $update_info;
+					$updates[$source][$module_id]['allowed_update'] = $this->is_allowed_update( $source, $module_id, $update_info );
+				}
 			}
 		}
 		return $updates;
@@ -177,13 +182,15 @@ class UpdateCenter_Config extends Db_ActiveRecord
 
 	public function get_module_auth($module_name, $source=null){
 		$repo_info = $this->get_repository_info();
-		foreach($repo_info['repositories'] as $repo_data){
-			if(!empty($source) && $repo_data['source'] !== $source){
-				continue;
-			}
+		if(isset($repo_info['repositories'])) {
+			foreach ( $repo_info['repositories'] as $repo_data ) {
+				if ( !isset($repo_data['source']) || !empty( $source ) && ( $repo_data['source'] !== $source)) {
+					continue;
+				}
 
-			if(isset($repo_data['modules'][$module_name]['auth'])){
-				return $repo_data['modules'][$module_name]['auth'];
+				if ( isset( $repo_data['modules'][$module_name]['auth'] ) ) {
+					return $repo_data['modules'][$module_name]['auth'];
+				}
 			}
 		}
 		return false;

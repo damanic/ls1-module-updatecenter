@@ -18,15 +18,33 @@ class UpdateCenter_Repository {
 		$latest_versions = array();
 
 			$repo_info = $this->config->get_repository_info();
+
+			if(!isset($repo_info['repositories'])){
+				return $latest_versions;
+			}
+
 			foreach ( $repo_info['repositories'] as $id => $info ) {
+
+				if(!isset($info['source'])){
+					continue;
+				}
+
 				$source       = $info['source'];
 				$driver_class = 'UpdateCenter_Repository_' . $source;
 				if ( !class_exists( $driver_class ) ) {
-					throw new Phpr_ApplicationException( "Repository driver ($driver_class) does not exist for repo type: " . $source );
+					throw new Phpr_ApplicationException( "Repository driver ($driver_class) does not exist for repo/source type: " . $source );
 				}
+
+				if(!isset($info['modules'])){
+					continue;
+				}
+
 				$driver = new $driver_class( $info['modules'] );
 
 				foreach ( $info['modules'] as $module_name => $module_info ) {
+					if(!isset( $module_info['owner']) || !isset($module_info['repo'])){
+						continue;
+					}
 					if($this->config->is_allowed_update($source,$module_name,$module_info) && !$this->config->is_blocked_module($module_name)) {
 						$latest_versions[$module_name]['version']     = $driver->get_latest_version_number( $module_name, $source );
 						$latest_versions[$module_name]['description'] = $source . '/' . $module_info['owner'] . '/' . $module_info['repo'] . ': ' . $driver->get_latest_version_description( $module_name );
@@ -45,6 +63,9 @@ class UpdateCenter_Repository {
 		$latest_versions = $repo->get_latest_versions();
 
 		foreach($latest_versions as  $module_name => $new_version_info){
+			if(!isset($new_version_info['version']) || !isset($installed_versions[$module_name]['version'])){
+				continue;
+			}
 			if($force || UpdateCenter_Helper::is_version_newer($new_version_info['version'],$installed_versions[$module_name]['version'])){
 				$obj = new stdClass();
 				$obj->name = $installed_versions[$module_name]['info']->name;
@@ -131,12 +152,23 @@ class UpdateCenter_Repository {
 	public function load_driver_for($module_name, $source=null){
 
 		$repo_info = $this->config->get_repository_info();
+
+		if(!isset($repo_info['repositories'])){
+			throw new Phpr_ApplicationException('Could not load driver for '.$module_name.' the updatecenter config file is not correct');
+		}
+
 		foreach($repo_info['repositories'] as $id => $info){
-			if(!empty($source) && $source !== $info['source']){
+			if(!isset($info['source']) || (!empty($source) && $source !== $info['source'])){
 				continue;
 			}
 			$source = $info['source'];
+
+			if(!isset($info['modules'])){
+				continue;
+			}
+
 			foreach($info['modules'] as $module_id => $module_details){
+
 				if($module_name == $module_id){
 					$driver_class = 'UpdateCenter_Repository_'.$source;
 

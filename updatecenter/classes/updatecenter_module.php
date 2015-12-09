@@ -55,7 +55,7 @@ class updateCenter_Module extends Core_ModuleBase {
 			$has_version = Core_ZipHelper::findFile('updates/version.dat', $file);
 			$has_correct_module_class = Core_ZipHelper::findFile('classes/'.$module_name.'_module.php', $file);
 			if($has_version && $has_correct_module_class){
-				if($has_version['filename'] == 'modules/'.$module_name.'/updates/version.dat') {
+				if(isset($has_version['filename']) && $has_version['filename'] == 'modules/'.$module_name.'/updates/version.dat') {
 					//archive is in correct folder structure, pass directly to update
 					$data['files'][] = $file;
 				} else {
@@ -108,19 +108,21 @@ class updateCenter_Module extends Core_ModuleBase {
 	}
 
 	public function override_ls_versions($data){
-		foreach($data['modules'] as $module_name => $version){
+		if(isset($data['modules'])) {
+			foreach ( $data['modules'] as $module_name => $version ) {
 
-			if(UpdateCenter_Config::is_core_module($module_name)){
-				if(!UpdateCenter_Helper::is_old_ls_version($module_name,$version)){
-					//Avoid errors: always send last ls version to lemonstand update center if up to date with final official release.
-					$data['modules'][$module_name] = UpdateCenter_Config::get_last_ls_version($module_name);
+				if ( UpdateCenter_Config::is_core_module( $module_name ) ) {
+					if ( !UpdateCenter_Helper::is_old_ls_version( $module_name, $version ) ) {
+						//Avoid errors: always send last ls version to lemonstand update center if up to date with final official release.
+						$data['modules'][$module_name] = UpdateCenter_Config::get_last_ls_version( $module_name );
+					}
 				}
-			}
 
-			if(UpdateCenter_Config::get()->is_blocked_module($module_name)){
-				unset($data['modules'][$module_name]);
-			}
+				if ( UpdateCenter_Config::get()->is_blocked_module( $module_name ) ) {
+					unset( $data['modules'][$module_name] );
+				}
 
+			}
 		}
 		return $data;
 	}

@@ -11,11 +11,17 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		return $this->cache[$module_name]['latest_version'];
 		}
 
-		$repo_details = $this->module_info[$module_name];
+		$repo_details = isset($this->module_info[$module_name]) ? $this->module_info[$module_name] : false;
 		if(!$repo_details){
 			throw new Phpr_ApplicationException('No github repository information found for '.$module_name);
 		}
-		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), null, $repo_details['auth']);
+
+		if(!isset($repo_details['repo']) || !isset($repo_details['owner'])){
+			throw new Phpr_ApplicationException('updatecenter config is missing repo and owner parameters for module:'.$module_name);
+		}
+
+		$auth = isset($repo_details['auth']) ? $repo_details['auth'] : array();
+		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), null, $auth);
 
 		if(isset($repo_data['message'])){
 			throw new Phpr_ApplicationException('Message from GitHub: '.$repo_data['message']);
@@ -43,14 +49,14 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		$repo_details = $this->module_info[$module_name];
 
 		//allow override to branch zipball for bleeding edge updates
-		if(!empty($repo_details['edge_updates'])){
+		if(isset($repo_details['edge_updates']) && !empty($repo_details['edge_updates'])){
 			$repo_edge = $repo_details['edge_updates'];
 			$edge_owner = empty($repo_edge['owner'])? $repo_details['owner'] : $repo_edge['owner'];
 			$edge_repo =  empty($repo_edge['repo'])? $repo_details['repo'] : $repo_edge['repo'];
 			$edge_branch =  empty($repo_edge['branch'])? 'master': $repo_edge['branch'];
 			return $this->get_branch_zipball_url($edge_repo,$edge_owner,$edge_branch);
 		}
-		else if(!empty($repo_details['git_use_branch'])){
+		else if(isset($repo_details['git_use_branch']) && !empty($repo_details['git_use_branch'])){
 			//git_use_branch deprecated
 			return $this->get_branch_zipball_url($repo_details['repo'],$repo_details['owner'],$repo_details['git_use_branch']);
 		}
@@ -62,7 +68,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 	public function get_latest_version_zip_size($module_name){
 		$repo_details = $this->module_info[$module_name];
 
-		if(!empty($repo_details['git_use_branch'])) { //downloading latest source, size unknown
+		if(isset($repo_details['git_use_branch']) && !empty($repo_details['git_use_branch'])) { //downloading latest source, size unknown
 			return 0;
 		}
 
