@@ -139,6 +139,7 @@ class updateCenter_Module extends Core_ModuleBase {
 	}
 
 	public function auto_updates(){
+		traceLog('Auto Update Check Performed');
 			try {
 				Core_UpdateManager::create()->update_application();
 			} catch ( Exception $e ) {
