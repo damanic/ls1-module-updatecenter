@@ -39,6 +39,8 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		$this->define_column('repository_config', 'Repository Config');
 		$this->define_column('repo_allowed_updates', 'Allowed Updates');
 		$this->define_column('github_auth_key', 'GitHub personal access token');
+		$this->define_column('enable_auto_updates', 'Enable Auto Updates');
+		$this->define_column('auto_update_interval', 'Check For Updates Interval');
 	}
 
 	public function define_form_fields($context = null)
@@ -48,6 +50,10 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_disable_module_checkboxes.htm')->tab('Block Updates');
 		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_status.htm')->tab('Status');
 		$this->add_form_field('github_auth_key')->tab('GitHub')->comment('The access token will be used by default for all github API communications. You do not need one to access public repositories but providing one will increase you API request limit. Setting a token for a specific repo is possible via the repo config file. Generate authentication keys from your github profile -> settings -> personal access tokens', 'above');
+
+		$this->add_form_partial(PATH_APP.'/modules/updatecenter/controllers/updatecenter_setup/_cron.htm')->tab('Cron');
+		$this->add_form_field('enable_auto_updates')->renderAs(frm_onoffswitcher)->tab('Cron');
+		$this->add_form_field('auto_update_interval')->tab('Cron')->comment('Enter interval in minutes. If no value is entered lemonstand will check for updates every 24 hours', 'above');
 	}
 
 	public function has_active_repository(){
@@ -221,6 +227,10 @@ class UpdateCenter_Config extends Db_ActiveRecord
 			$result[$module_id]['info'] = $module_info;
 		}
 		return $result;
+	}
+
+	public function get_auto_updates_interval(){
+		return ($this->auto_update_interval && is_numeric($this->auto_update_interval)) ? $this->auto_update_interval : 1440;
 	}
 
 

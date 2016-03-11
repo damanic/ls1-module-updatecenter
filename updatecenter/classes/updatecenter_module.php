@@ -40,6 +40,17 @@ class updateCenter_Module extends Core_ModuleBase {
 		Backend::$events->addEvent('core:onFetchSoftwareUpdateFiles',$this, 'add_repository_update_files');
 	}
 
+	public function subscribe_crontab(){
+		$config = UpdateCenter_Config::get();
+		if($config->enable_auto_updates) {
+			return array(
+				'auto_updates' => array( 'method' => 'auto_updates', 'interval' => $config->get_auto_updates_interval() ),
+			);
+		}
+		return array();
+	}
+
+
 	public function add_repository_update_files($data){
 		$data['force'] = $data['force'] ? true : false;
 		$config = UpdateCenter_Config::get();
@@ -125,6 +136,16 @@ class updateCenter_Module extends Core_ModuleBase {
 			}
 		}
 		return $data;
+	}
+
+	public function auto_updates(){
+			try {
+				Core_UpdateManager::create()->update_application();
+			} catch ( Exception $e ) {
+				traceLog( 'Auto Update Failed ' . $e->getMessage() );
+			}
+
+		return true;
 	}
 
 }

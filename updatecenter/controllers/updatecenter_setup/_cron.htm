@@ -1,0 +1,26 @@
+<h4>Automatic Updates:</h4>
+
+
+<?php
+ $core_version = Core_Version::getModuleVersionCached('core');
+  try{
+   $has_compatible_core = UpdateCenter_Helper::is_version_newer($core_version,'1.2.12');
+   }catch(Exception $e){
+   $has_compatible_core = false;
+   }
+    if(!$has_compatible_core):
+?>
+
+<ul class="formElements">
+ <li id="ga_hint">
+  <div class="hint">
+   <p class="last">You are running core module version <?php echo $core_version?> | This feature requires core module version 1.13.0 or higher from github: https://github.com/damanic/ls1-module-core </p>
+  </div>
+ </li>
+</ul>
+<?php endif;?>
+
+<p><b>Enabling Cron :</b>To enable lemonstands cron feature your system scheduler must be set up to trigger the core cron process at an interval greater or equal to the interval value you enter below. Example command to add to your scheduler: <code>/usr/local/bin/php -q /ROOT/PATH/TO/SITE/public_html/modules/core/cron.php</code></p>
+<p><b>Note:</b> Auto updates will not apply bleeding edge updates. Bleeding edge can only be done manually using force update</p>
+<hr/>
+<br/>
