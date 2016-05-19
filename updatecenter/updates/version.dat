@@ -21,3 +21,4 @@
 #1.2.11 Minor bugfix: removed unwelcome character from listSettingsItems()
 #1.2.12 Minor bugfix: added is_array() check to request_server_data()
 #1.2.13|@1_2_13 Added automatic update options
+#1.2.14 Allow repo to install new modules added to the repository config
