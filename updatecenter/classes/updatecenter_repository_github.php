@@ -36,13 +36,21 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 	}
 
 	public function get_latest_version_number($module_name){
-		$repo_data = $this->get_latest_version($module_name);
-		return $repo_data['tag_name'];
+		try {
+			$repo_data = $this->get_latest_version( $module_name );
+			return $repo_data['tag_name'];
+		} catch (Exception $e){
+			return 0;
+		}
 	}
 
 	public function get_latest_version_description($module_name){
-		$repo_data = $this->get_latest_version($module_name);
-		return $repo_data['name'].' | '. strtok($repo_data['body'], "\n");
+		try {
+			$repo_data = $this->get_latest_version($module_name);
+			return $repo_data['name'].' | '. strtok($repo_data['body'], "\n");
+		} catch (Exception $e){
+			return '';
+		}
 	}
 
 	public function get_latest_version_zip_url($module_name){
@@ -82,7 +90,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		$repo_data = $this->get_latest_version($module_name);
 		if(isset($repo_data['assets'])) {
 			foreach ( $repo_data['assets'] as $key => $asset ) {
-				if ( $asset['content_type'] == 'application/zip' ) {
+				if ( $asset['content_type'] == ('application/zip' || 'application/x-zip-compressed') ) {
 					return $asset;
 				}
 			}

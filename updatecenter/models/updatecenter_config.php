@@ -202,6 +202,23 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		return false;
 	}
 
+
+	public function is_module_declared_public($module_name, $source=null){
+		$repo_info = $this->get_repository_info();
+		if(isset($repo_info['repositories'])) {
+			foreach ( $repo_info['repositories'] as $repo_data ) {
+				if ( !isset($repo_data['source']) || !empty( $source ) && ( $repo_data['source'] !== $source)) {
+					continue;
+				}
+
+				if ( isset( $repo_data['modules'][$module_name]['public'] ) ) {
+					return $repo_data['modules'][$module_name]['public'];
+				}
+			}
+		}
+		return false;
+	}
+
 	public static function get_core_modules(){
 		$modules = array();
 		foreach (self::$ls_core_modules as $module => $version){

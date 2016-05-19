@@ -46,9 +46,12 @@ class UpdateCenter_Repository {
 						continue;
 					}
 					if($this->config->is_allowed_update($source,$module_name,$module_info) && !$this->config->is_blocked_module($module_name)) {
-						$latest_versions[$module_name]['version']     = $driver->get_latest_version_number( $module_name, $source );
-						$latest_versions[$module_name]['description'] = $source . '/' . $module_info['owner'] . '/' . $module_info['repo'] . ': ' . $driver->get_latest_version_description( $module_name );
-						$latest_versions[$module_name]['source']      = $source;
+						$latest_version = $driver->get_latest_version_number( $module_name, $source );
+						if($latest_version) {
+							$latest_versions[$module_name]['version']     = $latest_version;
+							$latest_versions[$module_name]['description'] = $source . '/' . $module_info['owner'] . '/' . $module_info['repo'] . ': ' . $driver->get_latest_version_description( $module_name );
+							$latest_versions[$module_name]['source']      = $source;
+						}
 					}
 				}
 			}
@@ -104,13 +107,16 @@ class UpdateCenter_Repository {
 
 
 	public function download_update_to_temp($module_name, $source){
+
 		$repo = $this->load_driver_for($module_name, $source);
 		$remote_location = $repo->get_latest_version_zip_url($module_name);
 		$size = $repo->get_latest_version_zip_size($module_name);
 
 		$headers = array();
-		$auth = $this->config->get_module_auth($module_name, $source);
-		$headers = array_merge($headers,$repo->get_auth_headers($auth));
+		if(!$this->config->is_module_declared_public($module_name,$source)) {
+			$auth    = $this->config->get_module_auth( $module_name, $source );
+			$headers = array_merge( $headers, $repo->get_auth_headers( $auth ) );
+		}
 
 		if (!filter_var($remote_location, FILTER_VALIDATE_URL))
 			throw new Phpr_ApplicationException('Could not locate download zip file for module update ('.$module_name.') '.$remote_location);
