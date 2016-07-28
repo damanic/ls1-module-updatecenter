@@ -122,7 +122,7 @@ class UpdateCenter_Repository {
 			throw new Phpr_ApplicationException('Could not locate download zip file for module update ('.$module_name.') '.$remote_location);
 
 
-		set_time_limit(0); // unlimited max execution time
+		@set_time_limit(0); // unlimited max execution time
 		$tmp_location = PATH_APP.'/temp/'.$module_name.'.zip';
 
 		$fp = fopen($tmp_location, 'w+');
@@ -140,8 +140,8 @@ class UpdateCenter_Repository {
 		curl_setopt($ch, CURLOPT_USERAGENT, "PHP/Lemonstand");
 		curl_setopt($ch, CURLOPT_FILE, $fp);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 28800);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_exec($ch);
+		$max_redirects = 10;
+		$this->curl_exec_follow($ch,$max_redirects);
 
 		if(curl_errno($ch))
 			throw new Phpr_ApplicationException("Failed to download update from $remote_location: " . curl_error($ch));
@@ -150,7 +150,7 @@ class UpdateCenter_Repository {
 
 		curl_close($ch);
 
-		if(!$statusCode == 200)
+		if($statusCode !== 200)
 			throw new Phpr_ApplicationException("Failed to download update from $remote_location, status code: " . $statusCode);
 
 
@@ -194,6 +194,62 @@ class UpdateCenter_Repository {
 			}
 		}
 		throw new Phpr_ApplicationException('Could not load driver for '.$module_name);
+	}
+
+
+	protected function curl_exec_follow( &$ch,  $maxredirects = 10 ) {
+
+		$mr            =  is_numeric($maxredirects) ? $maxredirects : 1;
+		$open_base_dir = ini_get( 'open_basedir' );
+
+		if ( empty( $open_base_dir ) && filter_var( ini_get( 'safe_mode' ), FILTER_VALIDATE_BOOLEAN ) === false ) {
+
+			curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, $mr > 0 );
+			curl_setopt( $ch, CURLOPT_MAXREDIRS, $mr );
+
+		} else {
+			curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, false );
+
+			if ( $mr > 0 ) {
+				$original_url = curl_getinfo( $ch, CURLINFO_EFFECTIVE_URL );
+				$newurl       = $original_url;
+
+				$rch = curl_copy_handle( $ch );
+				curl_setopt( $rch, CURLOPT_HEADER, true );
+				curl_setopt( $rch, CURLOPT_NOBODY, true );
+				curl_setopt( $rch, CURLOPT_FORBID_REUSE, false );
+				curl_setopt( $rch, CURLOPT_RETURNTRANSFER, true );
+
+				do {
+					curl_setopt( $rch, CURLOPT_URL, $newurl );
+					$header = curl_exec( $rch );
+					if ( curl_errno( $rch ) ) {
+						break;
+					} else {
+						$code = curl_getinfo( $rch, CURLINFO_HTTP_CODE );
+						if ( $code == 301 || $code == 302 ) {
+							preg_match( '/Location:(.*?)\n/i', $header, $matches );
+							$newurl = trim( array_pop( $matches ) );
+
+							if ( !preg_match( "/^https?:/i", $newurl ) ) {
+								$newurl = $original_url . $newurl;
+							}
+						} else {
+							break;
+						}
+					}
+				} while ( --$mr );
+
+				curl_close( $rch );
+
+				if ( $mr < 1 ) {
+					throw new Phpr_ApplicationException('Error: Update redirect loop');
+				}
+
+				curl_setopt( $ch, CURLOPT_URL, $newurl );
+			}
+		}
+		curl_exec( $ch );
 	}
 }
 

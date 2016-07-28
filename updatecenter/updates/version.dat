@@ -23,3 +23,4 @@
 #1.2.13|@1_2_13 Added automatic update options
 #1.2.14 Allow repo to install new modules added to the repository config
 #1.2.15 Bugfix: no longer throws error if repo entry does not have a release.
+#1.2.16 Bugfix: safe_mode , openbase_dir support. https://github.com/damanic/ls1-module-updatecenter/issues/10
