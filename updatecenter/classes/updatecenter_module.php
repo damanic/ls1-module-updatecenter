@@ -35,7 +35,7 @@ class updateCenter_Module extends Core_ModuleBase {
 
 	public function subscribeEvents(){
 		Backend::$events->addEvent('core:onAfterGetModuleVersions', $this, 'override_ls_versions');
-		Backend::$events->addEvent('core:onGetBlockedUpdateModules', $this, 'get_blocked_updates');
+		Backend::$events->addEvent('core:onGetBlockedUpdateModules', $this, 'get_blocked_ls_updates');
 		Backend::$events->addEvent('core:onAfterRequestUpdateList', $this, 'add_repository_updates');
 		Backend::$events->addEvent('core:onFetchSoftwareUpdateFiles',$this, 'add_repository_update_files');
 	}
@@ -108,12 +108,29 @@ class updateCenter_Module extends Core_ModuleBase {
 
 
 
-	public function get_blocked_updates($data){
-		$blocked_modules = UpdateCenter_Config::get()->get_blocked_modules();
+	public function get_blocked_ls_updates($data){
+		$config = UpdateCenter_Config::get();
+		$blocked_modules = $config->get_blocked_modules();
 		foreach($blocked_modules as $module){
 			if(!in_array($module, $data['modules'])){
 				array_push($data['modules'],$module);
 			}
+		}
+		try {
+			$repo_modules = $config->get_available_updates();
+			if ( is_array( $repo_modules ) ) {
+				foreach ( $repo_modules as $provider => $modules ) {
+					if ( is_array( $modules ) ) {
+						foreach ( $modules as $module_name => $module_info ) {
+							if ( isset( $module_info['allowed_update'] ) && $module_info['allowed_update'] ) {
+								array_push( $data['modules'], $module_name );
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception $e){
+			//no valid repo config data, no repo reserved modules, continue
 		}
 		return $data;
 	}
