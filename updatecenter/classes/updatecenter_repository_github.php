@@ -184,6 +184,12 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 
 			$result = curl_exec($ch);
 
+			if (curl_errno($ch) == 60){
+				curl_setopt($ch, CURLOPT_CAINFO, PATH_APP.'/modules/updatecenter/resources/ssl/cacert.pem');
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+				$result = curl_exec($ch);
+			}
+
 			if (curl_errno($ch))
 				throw new Phpr_ApplicationException( "Error connecting the update server." );
 			else
