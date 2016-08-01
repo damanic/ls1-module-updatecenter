@@ -40,6 +40,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 			$repo_data = $this->get_latest_version( $module_name );
 			return $repo_data['tag_name'];
 		} catch (Exception $e){
+			traceLog($e->getMessage());
 			return 0;
 		}
 	}

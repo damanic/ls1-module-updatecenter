@@ -210,3 +210,7 @@ Note: This will overwrite all code changes made to your core modules AND the und
 ###Update process successfully completed but update did not apply
 If a module has been added to your modules directory via FTP or not via lemonstands update manager, the files may not be PHP writable.
 Any file in a module directory that is not PHP writable will not be updated. Be sure to CHMOD the files and folders in your `/modules` directory so that it is PHP writable after any manual file upload.
+
+###No Updates available, when there are
+This is usually caused by a communication error. GitHub will deny connections if too many requests are made without a personal access token set. 
+Go to `system` -> `settings` -> `repo updates` -> `github (tab)` to set your access token.  Otherwise check your log file (as set by `$CONFIG['TRACE_LOG']['INFO']`) for errors.
