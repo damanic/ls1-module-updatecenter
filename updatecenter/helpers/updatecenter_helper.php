@@ -29,9 +29,6 @@ class updateCenter_Helper {
 		$new_version = empty($new_version) ? '0.0.0' : $new_version;
 		$old_version = empty($old_version) ? '0.0.0' : $old_version;
 
-		//traceLog('new'.$new_version);
-		//traceLog('old'.$old_version);
-
 		$new_version_array = explode('.',$new_version);
 		$old_version_array = explode('.', $old_version);
 
