@@ -8,7 +8,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 
 	public function get_latest_version($module_name){
 		if(isset($this->cache[$module_name]['latest_version'] )){
-		return $this->cache[$module_name]['latest_version'];
+			return $this->cache[$module_name]['latest_version'];
 		}
 
 		$repo_details = isset($this->module_info[$module_name]) ? $this->module_info[$module_name] : false;
@@ -22,6 +22,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 
 		$auth = isset($repo_details['auth']) ? $repo_details['auth'] : array();
 		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), array(), $auth);
+
 
 		if(!isset($repo_data['tag_name'])){
 			$branch_update = $this->get_branch_update($repo_details);
@@ -57,10 +58,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		}
 	}
 
-	public function get_latest_version_zip_url($module_name){
-		$repo_details = $this->module_info[$module_name];
-
-		//allow override to branch zipball for bleeding edge updates
+	protected function get_branch_update($repo_details){
 		if(isset($repo_details['edge_updates']) && !empty($repo_details['edge_updates'])){
 			$repo_edge = $repo_details['edge_updates'];
 			$edge_owner = empty($repo_edge['owner'])? $repo_details['owner'] : $repo_edge['owner'];
@@ -71,6 +69,15 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		else if(isset($repo_details['git_use_branch']) && !empty($repo_details['git_use_branch'])){
 			//git_use_branch deprecated
 			return $this->get_branch_zipball_url($repo_details['repo'],$repo_details['owner'],$repo_details['git_use_branch']);
+		}
+		return false;
+	}
+
+	public function get_latest_version_zip_url($module_name){
+		$repo_details = $this->module_info[$module_name];
+		$branch_update = $this->get_branch_update($repo_details);
+		if($branch_update){
+			return $branch_update;
 		}
 
 		$asset = $this->get_latest_version_zip_info($module_name);
