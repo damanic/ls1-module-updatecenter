@@ -41,7 +41,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 			return $repo_data['tag_name'];
 		} catch (Exception $e){
 			traceLog($e->getMessage());
-			return 0;
+			return false;
 		}
 	}
 

@@ -232,7 +232,9 @@ class UpdateCenter_Config extends Db_ActiveRecord
 	}
 
 	public static function get_installed_module_versions(){
-		$modules = Core_ModuleManager::listModules();
+		$active_modules = Core_ModuleManager::listModules(false);
+		$disabled_modules = Core_ModuleManager::listModules(false, true);
+		$modules = array_merge($active_modules,$disabled_modules);
 		$result = array();
 		foreach ($modules as $module)
 		{

@@ -47,7 +47,7 @@ class UpdateCenter_Repository {
 					}
 					if($this->config->is_allowed_update($source,$module_name,$module_info) && !$this->config->is_blocked_module($module_name)) {
 						$latest_version = $driver->get_latest_version_number( $module_name, $source );
-						if($latest_version) {
+						if($latest_version !== false) {
 							$latest_versions[$module_name]['version']     = $latest_version;
 							$latest_versions[$module_name]['description'] = $source . '/' . $module_info['owner'] . '/' . $module_info['repo'] . ': ' . $driver->get_latest_version_description( $module_name );
 							$latest_versions[$module_name]['source']      = $source;
