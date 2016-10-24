@@ -23,12 +23,15 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 		$auth = isset($repo_details['auth']) ? $repo_details['auth'] : array();
 		$repo_data = $this->request_server_data($this->get_latest_release_uri($repo_details['repo'],$repo_details['owner']), array(), $auth);
 
-		if(isset($repo_data['message'])){
-			throw new Phpr_ApplicationException('Message from GitHub: '.$repo_data['message']);
-		}
-
 		if(!isset($repo_data['tag_name'])){
-			throw new Phpr_ApplicationException('There are no releases for module `'.$module_name.'` on GitHub repo '.$repo_details['owner'].':'.$repo_details['repo'].'. To resolve this issue remove this repo from your config file or add a release version to the repository');
+			$branch_update = $this->get_branch_update($repo_details);
+			if($branch_update) {
+				$repo_data['tag_name']    = '0.0.0';
+				$repo_data['zipball_url'] = $branch_update;
+			} else {
+				$error = isset($repo_data['message']) ? "Message from GitHub: ".$repo_data['message'] : 'No update found for '.$module_name;
+				throw new  Phpr_ApplicationException($error);
+			}
 		}
 
 		$this->cache[$module_name]['latest_version'] = $repo_data;
