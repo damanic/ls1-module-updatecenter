@@ -75,7 +75,7 @@ class updateCenter_Helper {
 	}
 
 	public static function are_modules_writable($dir=null){
-		$dir = empty($dir) ? PATH_APP.'/modules/' : $dir;
+		$dir = empty($dir) ? PATH_APP.'/modules' : $dir;
 		$not_writable = array();
 		if (is_dir($dir)) {
 			if(is_writable($dir)){
