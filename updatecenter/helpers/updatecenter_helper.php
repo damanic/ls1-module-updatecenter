@@ -74,5 +74,36 @@ class updateCenter_Helper {
 		return true;
 	}
 
+	public static function are_modules_writable($dir=null){
+		$dir = empty($dir) ? PATH_APP.'/modules/' : $dir;
+		$not_writable = array();
+		if (is_dir($dir)) {
+			if(is_writable($dir)){
+				$objects = scandir($dir);
+				foreach ($objects as $object) {
+					if ($object != "." && $object != ".." && substr($object, 0, 1) != '.') {
+						if (!self::are_modules_writable($dir."/".$object)){
+							$not_writable[] = $dir."/".$object;
+						}
+					}
+				}
+			} else {
+				$not_writable[] = $dir;
+			}
+
+		} else if(file_exists($dir)){
+			if (!is_writable($dir)){
+				$not_writable[] = $dir;
+			}
+		}
+
+		if(count($not_writable)){
+			foreach($not_writable as $location){
+				traceLog('Update Center Notice: PHP does not have permission to write to '.$location);
+			}
+			return false;
+		}
+		return true;
+	}
 
 }

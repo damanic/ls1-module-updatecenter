@@ -1,3 +1,23 @@
+
+<h4>Write Access:</h4>
+<? $modules_writable = updateCenter_Helper::are_modules_writable(); ?>
+<p>Modules Directory <?= $modules_writable ? '<span style="color: green">Writable</span>' : '<span style="color: red">Not writable!</span>' ?></p>
+<? if (!$modules_writable) : ?>
+<ul class="formElements">
+
+    <li id="ga_hint">
+        <div class="error">
+            <p class="last">Not all files/folders in your modules directory are writable by PHP.
+                Some updates may not be applied as a result.
+                A list of these files/folders has been added to your lemonstand log/debug file.
+                For reliable updates, chmod/chown all files and folders in your modules directory to be writable by PHP</p>
+        </div>
+    </li>
+
+</ul>
+<? endif; ?>
+
+<hr/> <br/>
 <h4>Core Compatibility Status:</h4>
 <ul class="formElements">
 
