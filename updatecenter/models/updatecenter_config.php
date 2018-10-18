@@ -30,7 +30,8 @@ class UpdateCenter_Config extends Db_ActiveRecord
 		if (self::$loadedInstance)
 			return self::$loadedInstance;
 
-		return self::$loadedInstance = self::create()->order('id desc')->find();
+		$config = self::$loadedInstance = self::create()->order('id desc')->find();
+		return $config ? $config : self::create();
 	}
 
 	public function define_columns($context = null)

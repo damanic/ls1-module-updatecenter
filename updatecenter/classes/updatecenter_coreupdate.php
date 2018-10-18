@@ -20,7 +20,8 @@
 		'core:onGetBlockedUpdateModules',
 		'core:onAfterRequestUpdateList',
 		'function request_lemonstand_update_list(',
-		'core:onFetchSoftwareUpdateFiles'
+		'core:onFetchSoftwareUpdateFiles',
+		'function is_server_responsive('
 	);
 
 	protected $compatible_checks = array();
@@ -28,6 +29,7 @@
 	public function __construct(){
 
 		$this->core_um_location = PATH_APP.'/modules/core/classes/core_updatemanager.php';
+		$this->core_eula_location = PATH_APP.'/modules/core/classes/core_eulamanager.php';
 		$this->pclzip_lib_location =  PATH_APP.'/modules/core/thirdpart/pclzip.lib.php';
 		$this->core_ziphelper_location = PATH_APP.'/modules/core/helpers/core_ziphelper.php';
 		$this->update_files_location = PATH_APP.'/modules/updatecenter/updates/core/';
@@ -110,6 +112,7 @@
 		if(!$this->check_compatible_core_um()){
 			$this->update_core_um();
 		}
+
 	}
 
 	public function update_pclzip(){
@@ -132,6 +135,15 @@
 		$replacement_file = $this->update_files_location.'core_updatemanager.php';
 		if(!copy($replacement_file, $this->core_um_location)){
 			throw new Phpr_ApplicationException('Could not copy core_updatemanager.php to '.$this->core_um_location.' check write permissions for PHP');
+		}
+		$this->update_core_eula();
+		return true;
+	}
+
+	public function update_core_eula(){
+		$replacement_file = $this->update_files_location.'core_eulamanager.php';
+		if(!copy($replacement_file, $this->core_eula_location)){
+			throw new Phpr_ApplicationException('Could not copy core_eulamanager.php to '.$this->core_eula_location.' check write permissions for PHP');
 		}
 		return true;
 	}
