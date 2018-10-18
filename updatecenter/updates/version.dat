@@ -27,4 +27,4 @@
 #1.2.17 Bugfix: block all repo assigned modules from version checks on lemonstand_update_gateway
 #1.2.18 Allow branch updates from github repos that do not have any releases.
 #1.2.19 Added modules directory writable check on settings status tab.
-#1.2.20 Updated patch for core updates, removes dependancy on v1.lemonstand server availability
+#1.2.20 Updated patch for core updates, removes dependency on v1.lemonstand server availability

@@ -23,6 +23,14 @@
 						'view_info_url' => 'https://github.com/damanic/ls1-module-core/blob/master/readme.md',
 						'view_releases_url' => 'https://github.com/damanic/ls1-module-core/releases',
 					),
+					'system' => array(
+						'owner' => 'damanic',
+						'repo' => 'ls1-module-system',
+						'public' => true,
+						'default_allow_update' => true,
+						'view_info_url' => 'https://github.com/damanic/ls1-module-system/blob/master/readme.md',
+						'view_releases_url' => 'https://github.com/damanic/ls1-module-system/releases',
+					),
 					'cms' => array(
 						'owner' => 'damanic',
 						'repo' => 'ls1-module-cms',
