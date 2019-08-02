@@ -225,7 +225,7 @@
 			} catch (Exception $e){
 				//LS server down
 			}
-
+			$ls_files = array();
 			try {
 
 				if ( array( $versions ) && !Phpr::$config->get('FREEZE_LS_UPDATES',false)) {
@@ -248,7 +248,7 @@
 						throw new Exception( "Cannot create temporary file. Path is not writable: $tmp_path" );
 					}
 
-					$ls_files = array();
+
 					try {
 						foreach ( $file_hashes as $code => $file_hash ) {
 							$tmp_file = $tmp_path . '/' . $code . '.arc';
