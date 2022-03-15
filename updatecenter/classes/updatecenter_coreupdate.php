@@ -84,7 +84,7 @@
 
 	public function check_compatible_pclzip_lib(){
 
-		if(strpos($this->get_file_contents($this->pclzip_lib_location) , 'Zip Module 2.8.2') === false){
+		if(strpos($this->get_file_contents($this->pclzip_lib_location) , 'Zip Module 2.8.4') === false){
 			return $this->compatible_checks['check_compatible_pclzip_lib'] = false;
 		}
 
