@@ -55,6 +55,14 @@
 						'view_info_url' => 'https://github.com/damanic/ls1-module-shop/blob/master/readme.md',
 						'view_releases_url' => 'https://github.com/damanic/ls1-module-shop/releases',
 					),
+                    'users' => array(
+                        'owner' => 'damanic',
+                        'repo' => 'ls1-module-users',
+                        'public' => true,
+                        'default_allow_update' => false,
+                        'view_info_url' => 'https://github.com/damanic/ls1-module-users/blob/master/readme.md',
+                        'view_releases_url' => 'https://github.com/damanic/ls1-module-users/releases',
+                    ),
 				)
 			)
 		),
