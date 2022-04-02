@@ -30,7 +30,7 @@ class UpdateCenter_Repository_github extends UpdateCenter_Repository_Driver impl
 				$repo_data['tag_name']    = '0.0.0';
 				$repo_data['zipball_url'] = $branch_update;
 			} else {
-				$error = isset($repo_data['message']) ? "Message from GitHub: ".$repo_data['message'] : 'No update found for '.$module_name;
+				$error = isset($repo_data['message']) ? "Module $module_name | Message from GitHub: ".$repo_data['message'] : 'No update found';
 				throw new  Phpr_ApplicationException($error);
 			}
 		}
