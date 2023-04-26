@@ -2,9 +2,9 @@
 
 
 <?php
- $core_version = Core_Version::getModuleVersionCached('core');
+ $core_version = module_build('core');
   try{
-   $has_compatible_core = UpdateCenter_Helper::is_version_newer($core_version,'1.2.12');
+   $has_compatible_core = UpdateCenter_Helper::is_version_newer($core_version,'1.13.0');
    }catch(Exception $e){
    $has_compatible_core = false;
    }

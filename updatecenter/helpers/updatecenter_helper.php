@@ -57,7 +57,7 @@ class updateCenter_Helper {
 
 
 		if( $core_um_file_content === false || $pclzip_lib_file_content === false) {
-			throw new Phpr_Application_Exception('Could not read contents of required files in the core module. Please check files exists and is available to file_get_contents(): '.$core_um_location,' | '.$pclzip_lib_location);
+			throw new Phpr_ApplicationException('Could not read contents of required files in the core module. Please check files exists and is available to file_get_contents(): '.$core_um_location,' | '.$pclzip_lib_location);
 		}
 
 		foreach($required_core_code as $string){

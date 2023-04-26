@@ -43,10 +43,14 @@
 	}
 
 	public function check_required_files(){
+        $core_version = module_build('core');
+        if(updateCenter_Helper::is_version_newer($core_version, '1.13.0')){
+            return true;
+        }
 		if(!$this->checked_required_files) {
 			foreach ( $this->required_files as $file_id ) {
 				if ( !is_readable( $this->$file_id ) ) {
-					throw new Phpr_Application_Exception( 'Could not read contents of required file in the core module. Please check file exists and is available to file_get_contents(): ' . $this->$file_id );
+					throw new Phpr_ApplicationException( 'Could not read contents of required file in the core module. Please check file exists and is available to file_get_contents(): ' . $this->$file_id );
 				}
 			}
 		}
@@ -70,6 +74,11 @@
 	}
 
 	public function check_compatible_core_um(){
+        $core_version = module_build('core');
+        if(updateCenter_Helper::is_version_newer($core_version, '1.13.0')){
+            return true;
+        }
+
 		if(isset($this->compatible_checks['check_compatible_core_um']))
 			return $this->compatible_checks['check_compatible_core_um'];
 
@@ -83,6 +92,11 @@
 	}
 
 	public function check_compatible_pclzip_lib(){
+        if(class_exists('PclZip')){
+            $class = new \ReflectionClass('PclZip');
+            $classFile = $class->getFileName();
+            $this->pclzip_lib_location = $classFile;
+        }
 
 		if(strpos($this->get_file_contents($this->pclzip_lib_location) , 'Zip Module 2.8.4') === false){
 			return $this->compatible_checks['check_compatible_pclzip_lib'] = false;
@@ -92,6 +106,12 @@
 	}
 
 	public function check_compatible_ziphelper(){
+
+        if(class_exists('Core_ZipHelper')){
+            $class = new \ReflectionClass('Core_ZipHelper');
+            $classFile = $class->getFileName();
+            $this->core_ziphelper_location = $classFile;
+        }
 
 		if(strpos($this->get_file_contents($this->core_ziphelper_location) , 'function findFile(') === false){
 			return $this->compatible_checks['check_compatible_ziphelper'] = false;
