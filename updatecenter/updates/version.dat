@@ -30,3 +30,4 @@
 #1.2.20 Updated patch for core updates, removes dependency on v1.lemonstand server availability
 #1.2.21 Adds Users module to default updates list
 #1.2.22 Minor update PclZip
+#1.2.23 Simplify compatibility checks
