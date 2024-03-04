@@ -65,13 +65,18 @@ class updateCenter_Module extends Core_ModuleBase {
 			$file = $repo->download_update_to_temp($module_name, $obj->source);
 			$has_version = Core_ZipHelper::findFile('updates/version.dat', $file);
 			$has_correct_module_class = Core_ZipHelper::findFile('classes/'.$module_name.'_module.php', $file);
+            $filePath = isset($has_version['name']) ? $has_version['name'] : null;
+            if(!$filePath) {
+                //legacy pclzip
+                $filePath = isset($has_version['filename']) ? $has_version['filename'] : null;
+            }
 			if($has_version && $has_correct_module_class){
-				if(isset($has_version['filename']) && $has_version['filename'] == 'modules/'.$module_name.'/updates/version.dat') {
+				if($filePath && $filePath == 'modules/'.$module_name.'/updates/version.dat') {
 					//archive is in correct folder structure, pass directly to update
 					$data['files'][] = $file;
 				} else {
 					//archive needs to be repackaged
-					$root_folder = str_replace('updates/version.dat','',$has_version['filename']);
+					$root_folder = str_replace('updates/version.dat','',$filePath);
 					$data['files'][] = UpdateCenter_Helper::repackage_archive($module_name,$file,$root_folder);
 				}
 			} else {

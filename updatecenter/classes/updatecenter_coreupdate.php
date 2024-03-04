@@ -62,7 +62,7 @@
 			return false;
 		}
 
-		if(!$this->check_compatible_pclzip_lib()) {
+		if(!$this->check_compatible_zip_lib()) {
 			return false;
 		}
 
@@ -91,18 +91,20 @@
 		return $this->compatible_checks['check_compatible_core_um'] = true;
 	}
 
-	public function check_compatible_pclzip_lib(){
-        if(class_exists('PclZip')){
+	public function check_compatible_zip_lib(){
+
+        $this->compatible_checks['check_compatible_zip_lib'] = false;
+        if(extension_loaded('zip') && class_exists('\FileSystem\Zip')) {
+            return $this->compatible_checks['check_compatible_zip_lib'] = true;
+        } else if(class_exists('PclZip')){
             $class = new \ReflectionClass('PclZip');
             $classFile = $class->getFileName();
             $this->pclzip_lib_location = $classFile;
+            if(strpos($this->get_file_contents($this->pclzip_lib_location) , 'Zip Module 2.8.4') === true){
+                return $this->compatible_checks['check_compatible_zip_lib'] = true;
+            }
         }
-
-		if(strpos($this->get_file_contents($this->pclzip_lib_location) , 'Zip Module 2.8.4') === false){
-			return $this->compatible_checks['check_compatible_pclzip_lib'] = false;
-		}
-
-		return $this->compatible_checks['check_compatible_pclzip_lib'] = true;
+		return $this->compatible_checks['check_compatible_zip_lib'];
 	}
 
 	public function check_compatible_ziphelper(){
@@ -121,7 +123,7 @@
 	}
 
 	public function make_compatible(){
-		if(!$this->check_compatible_pclzip_lib()){
+		if(!$this->check_compatible_zip_lib()){
 			$this->update_pclzip();
 		}
 

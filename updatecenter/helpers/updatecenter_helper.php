@@ -8,11 +8,16 @@ class updateCenter_Helper {
 			throw new Phpr_ApplicationException('Please update folder permissions. PHP cannot create directory in '.PATH_APP.'/temp/');
 		}
 		Core_ZipHelper::unzip($temp_dir, $archiveFile);
+        try {
+            @unlink($archiveFile);
+        } catch (Exception $e) {
+            traceLog('Could not delete original archive file: '.$archiveFile);
+        }
 		Core_ZipHelper::zipDirectory($temp_dir.$archiveFolder,$new_zip,array(),null,'modules/'.$module_name);
 		if(is_dir($temp_dir)){
 			Phpr_Files::removeDirRecursive($temp_dir);
 		}
-		return $new_zip;
+		return realpath($new_zip);
 	}
 
 	public static function is_old_ls_version($module_name,$version){
