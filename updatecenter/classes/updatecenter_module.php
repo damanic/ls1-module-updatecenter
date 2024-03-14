@@ -1,4 +1,4 @@
-<?
+<?php
 
 class updateCenter_Module extends Core_ModuleBase {
 

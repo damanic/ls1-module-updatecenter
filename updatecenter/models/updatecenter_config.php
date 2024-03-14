@@ -102,9 +102,13 @@ class UpdateCenter_Config extends Db_ActiveRecord
 				if (!file_exists($infoPath))
 					continue;
 
-				include($infoPath);
-				$repository_info['repo_id'] = $repo_id;
-				$result[$repo_id] = $repository_info;
+                try {
+                    include($infoPath);
+                    $repository_info['repo_id'] = $repo_id;
+                    $result[$repo_id] = $repository_info;
+                } catch (\Error $e) {
+                    traceLog('Error loading repository info for '.$repo_id);
+                }
 			}
 		}
 
