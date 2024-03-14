@@ -32,3 +32,4 @@
 #1.2.22 Minor update PclZip
 #1.2.23 Simplify compatibility checks
 #1.2.23 Php Zip extension support
+#1.2.24 Catch errors importing repository config files
